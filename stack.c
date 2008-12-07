@@ -12,9 +12,11 @@
  * This should also consider a newly initialized stack, hopefully done with
  * calloc.  We can tell when stack->rightindex is null
  *
+ * Copies the 120 length string given by cube_to_append
+ *
  * Returns 1 on success, 0 on failure
  */
-int stack_push(stacktype *stack, cube_type cube_to_append, int turn, int distance)
+int stack_push(stacktype *stack, const char *cube_to_append, int turn, int distance)
 {
     qdata *newq;
     if (stack->rightblock == NULL){

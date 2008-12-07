@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O -Wall -pedantic
+CFLAGS=-O -Wall -pedantic -Werror
 
 SRCS=cube.c stack.c common.c cornertable.c
 HEADS=cube.h stack.h common.h cornertable.h
@@ -10,3 +10,5 @@ all: $(OBJS) tags
 tags: $(SRCS) $(HEADS)
 	ctags -R .
 
+clean:
+	-rm -f *.o

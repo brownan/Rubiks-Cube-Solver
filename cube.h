@@ -72,7 +72,7 @@ const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbn
  * Returns a pointer to the cube to_twist on success
  * null on failure
  */
-cube_type *cube_turn(cube_type *to_twist, int direction);
+char *cube_turn(char *to_twist, int direction);
 
 /*
  * These tables are used in the heuristics.  For each twist, there are certian

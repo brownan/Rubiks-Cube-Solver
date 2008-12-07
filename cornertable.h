@@ -11,19 +11,27 @@
  * The actual table.
  * I couldn't think of a better way to do this, so run this macro
  * to malloc the space for the table
+ * This should be put into an UNSIGNED CHAR POINTER
  */
-#define CORNER_TABLE_NEW calloc(44089920, 1);
+#define CORNER_TABLE_NEW calloc(44089920, 1)
+#define CORNER_TABLE_CLEAR(table) bzero(table, 44089920)
 
 /*
  * corner_hash
  * Input: a 120 byte cube string
  * Output: An integer in the range 0 to 88179840-1
  */
-int corner_hash(const cube_type *cubetohash);
+int corner_hash(const char *cubetohash);
 
 /*
- * This gets the stored heuristics value from the table
+ * This gets the stored value from the table
  */
-char corner_lookup(const char *cornertable, const cube_type *c);
+char corner_lookup(const char *cornertable, const char *cubetohash);
+
+/*
+ * Generates the corner heuristics table about the given solution, which
+ * could be any valid cube
+ */
+int corner_generate(char *cornertable, const char *solution);
 
 #endif

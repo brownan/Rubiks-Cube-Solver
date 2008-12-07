@@ -48,7 +48,7 @@ typedef struct {
  * pass in a copy of the cube type, the turn used to produce this
  * cube, and the distance.  It will be pushed onto the stack
  */
-int stack_push(stacktype *stack, cube_type cube_to_append, int turn, int distance);
+int stack_push(stacktype *stack, const char *cube_to_append, int turn, int distance);
 
 /*
  * This stack works a bit differently.  There are operations to individually
