@@ -82,7 +82,8 @@ cube *turn(cube *to_twist, int direction);
  * cubeavoid is an array, the Mth bit of the Nth item indicates that turn M
  * should not be performed after turning the cube in the N direction.
  * 
- * So to determine if you should turn a direction i after having turned a direction
+ * So to determine if you should turn a direction i after having turned a
+ * direction
  * t, do:
  * if (cubeavoid[t] & (1L << i)) {...}
  * in fact, I think I'll make that a macro:
@@ -91,9 +92,10 @@ cube *turn(cube *to_twist, int direction);
 /*
  * Now just do:
  * if (SHOULDIAVOID(i, t)) {...}
+ * the macro returns TRUE if you should NOT take that path
  */
 const long cubeavoid[] = {
-                              /* |17<----------->0| */
+                             /* |17<----------->0| */
                     0010101, /* 000001000001000001 */
                     0020202, /* 000010000010000010 */
                     0040404, /* 000100000100000100 */
