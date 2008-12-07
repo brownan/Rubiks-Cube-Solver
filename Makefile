@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-g -Wall -pedantic -Werror
+CFLAGS=-O2 -Wall -pedantic -Werror
 
 SRCS=cube.c stack.c common.c cornertable.c main.c
 HEADS=cube.h stack.h common.h cornertable.h

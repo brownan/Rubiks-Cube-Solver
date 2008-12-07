@@ -14,7 +14,7 @@
  * This should be put into an UNSIGNED CHAR POINTER
  */
 #define CORNER_TABLE_NEW calloc(44089920, 1)
-#define CORNER_TABLE_CLEAR(table) memset(table, 0, 44089920)
+#define CORNER_TABLE_CLEAR(table) memset(table, 255, 44089920)
 
 /*
  * corner_hash

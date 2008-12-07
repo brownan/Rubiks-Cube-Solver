@@ -252,7 +252,6 @@ int corner_generate(unsigned char *cornertable, const char *solution)
     int i;
     unsigned char *instack;
     int depth;
-    int lastturned;
     cube_type turned;
 
 
@@ -269,7 +268,6 @@ int corner_generate(unsigned char *cornertable, const char *solution)
         /* if stack is empty, go up a level */
         if (stack->length == 0)
         {
-            lastturned = -1;
             stack_push(stack, solution, -1, 0);
             depth++;
             /* clear out instack table */
@@ -283,7 +281,8 @@ int corner_generate(unsigned char *cornertable, const char *solution)
         stack_pop(stack);
         popcount++;
 
-        if (popcount % 10000 == 0) {
+        /* Print out status every 2^18 pops  (approx every 200k)*/
+        if ((popcount & 0777777) == 0777777) {
             fprintf(stderr, "\r%d/88179840 hashed, on level:%d/11, total traversed:%d ", count, depth, popcount);
         }
 
@@ -311,7 +310,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
             /* Not at the current depth, put all turns onto the stack */
             for (i=0; i<18; i++) {
                 /* Determine if we should skip this turn */
-                if (SHOULDIAVOID(i, current.turn)) {
+                if (current.turn != -1 && SHOULDIAVOID(i, current.turn)) {
                     continue;
                 }
 
