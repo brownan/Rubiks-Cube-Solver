@@ -342,5 +342,10 @@ int corner_generate(unsigned char *cornertable, const char *solution)
         }
 
     }
+    free(instack);
+    while(stack->length) {
+        stack_pop(stack);
+    }
+    free(stack);
     return 1;
 }
