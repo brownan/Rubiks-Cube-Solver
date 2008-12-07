@@ -42,7 +42,7 @@ const char solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnn
  * This macro is used to return a pointer into a cube type for the given
  * cubie (sub-cube)
  */
-#define cubie(cube, n) (cube + (n*6))
+#define CUBIE(cube, n) ((char *)cube + (n*6))
 
 /*
  * Defines cube sides, they go in this order
