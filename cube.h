@@ -39,7 +39,7 @@ typedef char cube_type[6*20];
 /*
  * Default "solved" cube definition
  */
-const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnnnognrbnnnnrnnngwnbnonwnnnonwnnnogwnbnnnwnnnngwrbnnnwrnnnnwrnnng";
+extern const char cube_solved[];
 
 /*
  * This macro is used to return a pointer into a cube type for the given
@@ -75,11 +75,11 @@ const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbn
 char *cube_turn(char *to_twist, int direction);
 
 /*
- * These tables are used in the heuristics.  For each twist, there are certian
- * twists that should be subsequently avoided.  This helps avoid the situation of
- * turning opposite faces in a different order.
- * In short, when a turn is performed, this table should be consulted for turns
- * that should NOT be performed right after.
+ * This table is used in the heuristics.  For each twist, there are certian
+ * twists that should be subsequently avoided.  This helps avoid the situation
+ * of turning opposite faces in a different order.  In short, when a turn is
+ * performed, this table should be consulted for turns that should NOT be
+ * performed right after.
  *
  * The table works like this: 
  * cubeavoid is an array, the Mth bit of the Nth item indicates that turn M
@@ -98,27 +98,9 @@ char *cube_turn(char *to_twist, int direction);
  *
  * Side note: these numbers should be at least 18 bits.  An integer is usually
  * 32 bits, but not guaranteed to be so, so I use long here instead.
+ *
+ * This is defined in cube.c, delcared here.
  */
-const long cube_turn_avoid[] = {
-                             /* |17<----------->0| */
-                    0010101, /* 000001000001000001 */
-                    0020202, /* 000010000010000010 */
-                    0040404, /* 000100000100000100 */
-                    0111111, /* 001001001001001001 */
-                    0222222, /* 010010010010010010 */
-                    0444444, /* 100100100100100100 */
-                    0010101, /* 000001000001000001 */
-                    0020202, /* 000010000010000010 */
-                    0040404, /* 000100000100000100 */
-                    0111111, /* 001001001001001001 */
-                    0222222, /* 010010010010010010 */
-                    0444444, /* 100100100100100100 */
-                    0010101, /* 000001000001000001 */
-                    0020202, /* 000010000010000010 */
-                    0040404, /* 000100000100000100 */
-                    0111111, /* 001001001001001001 */
-                    0222222, /* 010010010010010010 */
-                    0444444, /* 100100100100100100 */
-                    };
+extern const long cube_turn_avoid[];
 
 #endif

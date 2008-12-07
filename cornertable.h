@@ -14,7 +14,7 @@
  * This should be put into an UNSIGNED CHAR POINTER
  */
 #define CORNER_TABLE_NEW calloc(44089920, 1)
-#define CORNER_TABLE_CLEAR(table) bzero(table, 44089920)
+#define CORNER_TABLE_CLEAR(table) memset(table, 0, 44089920)
 
 /*
  * corner_hash
@@ -26,12 +26,12 @@ int corner_hash(const char *cubetohash);
 /*
  * This gets the stored value from the table
  */
-char corner_lookup(const char *cornertable, const char *cubetohash);
+char corner_lookup(const unsigned char *cornertable, const char *cubetohash);
 
 /*
  * Generates the corner heuristics table about the given solution, which
  * could be any valid cube
  */
-int corner_generate(char *cornertable, const char *solution);
+int corner_generate(unsigned char *cornertable, const char *solution);
 
 #endif

@@ -1,10 +1,11 @@
 #include <string.h>
-#include <strings.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "cornertable.h"
 #include "common.h"
 #include "stack.h"
+#include "cube.h"
 
 int corner_hash(const char *cubestr)
 {
@@ -228,7 +229,7 @@ int corner_hash(const char *cubestr)
  * need it, maybe it'll save a stack call or something, or maybe it won't
  * matter
  */
-char corner_lookup(const char *cornertable, const char *cubetohash)
+char corner_lookup(const unsigned char *cornertable, const char *cubetohash)
 {
     int hash = corner_hash(cubetohash);
     return hash&1 ? cornertable[(hash-1)/2] >> 4 : \
@@ -236,7 +237,7 @@ char corner_lookup(const char *cornertable, const char *cubetohash)
 }
 
 /* Returns 1 on success */
-int corner_generate(char *cornertable, const char *solution)
+int corner_generate(unsigned char *cornertable, const char *solution)
 {
     stacktype *stack;
     /*
@@ -282,7 +283,7 @@ int corner_generate(char *cornertable, const char *solution)
         stack_pop(stack);
         popcount++;
 
-        if (popcount % 100000 == 0) {
+        if (popcount % 10000 == 0) {
             fprintf(stderr, "\r%d/88179840 hashed, on level:%d/11, total traversed:%d ", count, depth, popcount);
         }
 
@@ -310,7 +311,9 @@ int corner_generate(char *cornertable, const char *solution)
             /* Not at the current depth, put all turns onto the stack */
             for (i=0; i<18; i++) {
                 /* Determine if we should skip this turn */
-                /* XXX */
+                if (SHOULDIAVOID(i, current.turn)) {
+                    continue;
+                }
 
                 memcpy(turned, current.cube_data, 120);
                 cube_turn(turned, i);
