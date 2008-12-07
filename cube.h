@@ -1,3 +1,6 @@
+#ifndef CUBE_H
+#define CUBE_H
+
 /**
  * The cube type.  This is made up of a 120 length string, with
  * each character being a color:
@@ -36,7 +39,7 @@ typedef char cube[6*20];
 /*
  * Default "solved" cube definition
  */
-const char solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnnnognrbnnnnrnnngwnbnonwnnnonwnnnogwnbnnnwnnnngwrbnnnwrnnnnwrnnng";
+const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnnnognrbnnnnrnnngwnbnonwnnnonwnnnogwnbnnnwnnnngwrbnnnwrnnnnwrnnng";
 
 /*
  * This macro is used to return a pointer into a cube type for the given
@@ -69,7 +72,7 @@ const char solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnn
  * Returns a pointer to the cube to_twist on success
  * null on failure
  */
-cube *turn(cube *to_twist, int direction);
+cube *cube_turn(cube *to_twist, int direction);
 
 /*
  * These tables are used in the heuristics.  For each twist, there are certian
@@ -87,7 +90,7 @@ cube *turn(cube *to_twist, int direction);
  * if (cubeavoid[t] & (1L << i)) {...}
  * in fact, I think I'll make that a macro:
  */
-#define SHOULDIAVOID(i, t) (cubeavoid[t] & (1L<<i))
+#define SHOULDIAVOID(i, t) (cube_turn_avoid[t] & (1L<<i))
 /*
  * Now just do:
  * if (SHOULDIAVOID(i, t)) {...}
@@ -96,7 +99,7 @@ cube *turn(cube *to_twist, int direction);
  * Side note: these numbers should be at least 18 bits.  An integer is usually
  * 32 bits, but not guaranteed to be so, so I use long here instead.
  */
-const long cubeavoid[] = {
+const long cube_turn_avoid[] = {
                              /* |17<----------->0| */
                     0010101, /* 000001000001000001 */
                     0020202, /* 000010000010000010 */
@@ -117,3 +120,5 @@ const long cubeavoid[] = {
                     0222222, /* 010010010010010010 */
                     0444444, /* 100100100100100100 */
                     };
+
+#endif

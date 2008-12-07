@@ -4,7 +4,7 @@
 /*
  * Turns the cube.  See comments by declaration in cube.h for more details
  */
-cube *turn(cube *to_twist, int dir)
+cube *cube_turn(cube *to_twist, int dir)
 {
     int turndir;
     char temp;
