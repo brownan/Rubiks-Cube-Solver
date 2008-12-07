@@ -1,11 +1,12 @@
 CC=gcc
 CFLAGS=-O -Wall -pedantic
 
-SRCS=cube.c stack.c
-OBJS=cube.o stack.o
+SRCS=cube.c stack.c common.c cornertable.c
+HEADS=cube.h stack.h common.h cornertable.h
+OBJS=cube.o stack.o common.o cornertable.o
 
 all: $(OBJS) tags
 
-tags:
+tags: $(SRCS) $(HEADS)
 	ctags -R .
 

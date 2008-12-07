@@ -14,7 +14,7 @@
  *
  * Returns 1 on success, 0 on failure
  */
-int stack_push(stacktype *stack, cube cube_to_append, int turn, int distance)
+int stack_push(stacktype *stack, cube_type cube_to_append, int turn, int distance)
 {
     qdata *newq;
     if (stack->rightblock == NULL){
@@ -60,7 +60,7 @@ int stack_pop(stacktype *stack)
     return 1;
 }
 
-int stack_peek_cube(stacktype *stack, cube *targetcube)
+int stack_peek_cube(stacktype *stack, cube_type *targetcube)
 {
     memcpy(targetcube, stack->rightblock->data[stack->rightindex].cube_data, 120);
     return 1;

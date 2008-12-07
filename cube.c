@@ -5,7 +5,7 @@
 /*
  * Turns the cube.  See comments by declaration in cube.h for more details
  */
-cube *cube_turn(cube *to_twist, int dir)
+cube_type *cube_turn(cube_type *to_twist, int dir)
 {
     int turndir;
     char temp;
@@ -62,7 +62,7 @@ cube *cube_turn(cube *to_twist, int dir)
             swap[2] = DOWN;
             swap[3] = FRONT;
             break;
-        case default:
+        default:
             /* To squelch warnings: */
             swap[0] = 0;
             swap[1] = 0;

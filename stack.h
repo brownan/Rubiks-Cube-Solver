@@ -16,7 +16,7 @@
  * This struct is what data goes in each slot in the stack
  */
 typedef struct {
-    cube cube_data;
+    cube_type cube_data;
     int turn;
     int distance;
 } qdata;
@@ -48,7 +48,7 @@ typedef struct {
  * pass in a copy of the cube type, the turn used to produce this
  * cube, and the distance.  It will be pushed onto the stack
  */
-int stack_push(stacktype *stack, cube cube_to_append, int turn, int distance);
+int stack_push(stacktype *stack, cube_type cube_to_append, int turn, int distance);
 
 /*
  * This stack works a bit differently.  There are operations to individually
@@ -59,7 +59,7 @@ int stack_push(stacktype *stack, cube cube_to_append, int turn, int distance);
  *
  * These could even be macros (look into this XXX)
  */
-int stack_peek_cube(stacktype *stack, cube *targetcube);
+int stack_peek_cube(stacktype *stack, cube_type *targetcube);
 int stack_peek_turn(stacktype *stack);
 int stack_peek_distance(stacktype *stack);
 

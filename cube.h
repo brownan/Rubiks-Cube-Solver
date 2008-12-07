@@ -34,7 +34,7 @@
                 13--14---15
 
  */
-typedef char cube[6*20];
+typedef char cube_type[6*20];
 
 /*
  * Default "solved" cube definition
@@ -72,7 +72,7 @@ const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbn
  * Returns a pointer to the cube to_twist on success
  * null on failure
  */
-cube *cube_turn(cube *to_twist, int direction);
+cube_type *cube_turn(cube_type *to_twist, int direction);
 
 /*
  * These tables are used in the heuristics.  For each twist, there are certian
