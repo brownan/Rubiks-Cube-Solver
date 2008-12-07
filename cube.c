@@ -1,3 +1,4 @@
+#include <stdio.h>
 
 #include "cube.h"
 
@@ -61,6 +62,15 @@ cube *cube_turn(cube *to_twist, int dir)
             swap[2] = DOWN;
             swap[3] = FRONT;
             break;
+        case default:
+            /* To squelch warnings: */
+            swap[0] = 0;
+            swap[1] = 0;
+            swap[2] = 0;
+            swap[3] = 0;
+            fprintf(stderr, "WARNING: CUBE TURN SWITCH CASE RAN OFF DEFAULT\n");
+            break;
+
     }
     if (turndir == 1) {
         for (i=0; i<20; i++) {

@@ -16,6 +16,7 @@
  */
 int stack_push(stacktype *stack, cube cube_to_append, int turn, int distance)
 {
+    qdata *newq;
     if (stack->rightblock == NULL){
         /* initialize */
         stack->rightblock = malloc(sizeof(block));
@@ -33,7 +34,7 @@ int stack_push(stacktype *stack, cube cube_to_append, int turn, int distance)
     stack->length++;
     stack->rightindex++;
     /* Now copy data in */
-    qdata *newq = &(stack->rightblock->data[stack->rightindex]);
+    newq = &(stack->rightblock->data[stack->rightindex]);
     memcpy(newq->cube_data, cube_to_append, 120);
     newq->turn = turn;
     newq->distance = distance;
@@ -62,6 +63,7 @@ int stack_pop(stacktype *stack)
 int stack_peek_cube(stacktype *stack, cube *targetcube)
 {
     memcpy(targetcube, stack->rightblock->data[stack->rightindex].cube_data, 120);
+    return 1;
 }
 int stack_peek_turn(stacktype *stack)
 {
