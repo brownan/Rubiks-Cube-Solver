@@ -36,6 +36,26 @@ const long cube_turn_avoid[] = {
                     };
 
 /*
+ * This table is used by cube_turn to determine the cubie numbers after a turn
+ * It is two dimensional:
+ * The first dimension goes from 0 to 19 representing the old position
+ * The second dimension ranges from 0 to 17 for the turn being performed
+ * The value in the table is the new position.
+ * XXX Values in table are off by 1 (should subtract 1) OOPS
+ */
+static char turn_position_lookup[20][18] = {
+            /* clockwise */  /* counter */  /* half-turn */
+    /* 1 */ { 1,1,6,6,13,1,  1,1,13,6,3,1,  1,1,18,8,15,1},
+            { 2,2,2,5,9,2,   2,2,2,4,10,2,  2,2,2,7,14,2},
+            { 3,3,3,8,1,15,  3,3,3,1,15,8,  3,3,3,6,13,20},
+    /* 4 */ { 4,4,11,2,4,4,  4,4,9,7,4,4,   4,4,16,5,4,4},
+            { 5,5,5,7,5,10,  5,5,5,2,5,12,  5,5,5,4,5,17},
+    /* 6 */ { 6,8,18,1,6,6,  6,18,1,8,6,6,  6,20,13,3,6,6},
+            { 7,12,7,4,7,7,  7,11,7,5,7,7,  7,19,7,2,7,7},
+            { 8,20,8,6,8,3,  8,6,8,3,8,20,  8,18,8,1,8,15},
+};
+
+/*
  * Turns the cube.  See comments by declaration in cube.h for more details
  */
 char *cube_turn(char *to_twist, int dir)
