@@ -365,3 +365,12 @@ int corner_write(unsigned char *cornertable, FILE *output)
         return 0;
     return 1;
 }
+int corner_read(unsigned char *cornertable, FILE *input)
+{
+    int read;
+    read = fread(cornertable, 1, 44089920, input);
+    if (read < 44089920) {
+        return 0;
+    }
+    return 1;
+}

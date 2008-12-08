@@ -38,4 +38,8 @@ int corner_generate(unsigned char *cornertable, const char *solution);
  * Dumps the table out to the given file object, open for writing
  */
 int corner_write(unsigned char *cornertable, FILE *output);
+/*
+ * Reads a table in from a file obj open for reading
+ */
+int corner_read(unsigned char *cornertable, FILE *input);
 #endif
