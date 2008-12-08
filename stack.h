@@ -25,7 +25,7 @@ typedef struct {
  * This struct is each block of data.  This should be large so
  * we don't do many mallocs
  */
-#define BLOCKLEN 100
+#define BLOCKLEN 10000
 typedef struct BLOCK {
     struct BLOCK *leftlink;
     /* no need for a right link */
