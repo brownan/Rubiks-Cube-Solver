@@ -2,7 +2,11 @@
 
 #include "cube.h"
 
-const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnnnognrbnnnnrnnngwnbnonwnnnonwnnnogwnbnnnwnnnngwrbnnnwrnnnnwrnnng";
+const char cube_solved[] = "\x00nnbyon\x01nnnyon\x02nnnyog\x03nnbynn" \
+                           "\x04nnnyng\x05nrbynn\x06nrnynn\x07nrnyng" \
+                           "\x08nnbnon\x09nnnnog\x0Anrbnnn\x0Bnrnnng" \
+                           "\x0Cwnbnon\x0Dwnnnon\x0Ewnnnog\x0Fwnbnnn" \
+                           "\x10wnnnng\x11wrbnnn\x12wrnnnn\x13wrnnng";
 
 const long cube_turn_avoid[] = {
                              /* |17<----------->0| */

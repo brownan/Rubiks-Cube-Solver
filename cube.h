@@ -2,19 +2,26 @@
 #define CUBE_H
 
 /**
- * The cube type.  This is made up of a 120 length string, with
- * each character being a color:
+ * The cube type.  This is made up of a 140 length string, broken up into
+ * substrings of length 7, one substring for each of the 20 cubies as shown in
+ * the diagram below.
+ * Each substring consists of:
+ * 1) an integer between 0 and 19 indicating its position (the chart below is
+ * off by 1) 
+ * 2) 6 characters indicating the colors on the front, top, left, back, bottom,
+ * and right sides respectively
+ *
+ * each color character is one of:
  * (w)hite
  * (r)ed
  * (b)lue
  * (y)ellow
  * (o)range
  * (g)reen)
- * and n for (n)one
+ * and n for (n)one, indicating that side faces into the cube
  *
- * Cubies are numbered from 0 to 19 (each cubie gets 6 characters for the
- * front, top, left, back, bottom, right sides respectively)
- * Cube numbers are as follows:
+ * Cubies are numbered from 0 to 19 
+ * Cube numbers are as follows (subtract 1):
     6----7----8
     |         |\
     4    Y    5 \
@@ -34,7 +41,7 @@
                 13--14---15
 
  */
-typedef char cube_type[6*20];
+typedef char cube_type[7*20];
 
 /*
  * Default "solved" cube definition
