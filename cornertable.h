@@ -34,4 +34,8 @@ char corner_lookup(const unsigned char *cornertable, const char *cubetohash);
  */
 int corner_generate(unsigned char *cornertable, const char *solution);
 
+/*
+ * Dumps the table out to the given file object, open for writing
+ */
+int corner_write(unsigned char *cornertable, FILE *output);
 #endif

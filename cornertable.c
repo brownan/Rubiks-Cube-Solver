@@ -353,3 +353,15 @@ int corner_generate(unsigned char *cornertable, const char *solution)
     free(stack);
     return 1;
 }
+
+/*
+ * Return 1 on success 0 on failure
+ */
+int corner_write(unsigned char *cornertable, FILE *output)
+{
+    int written;
+    written = fwrite(cornertable, 1, 44089920, output);
+    if (written < 44089920)
+        return 0;
+    return 1;
+}
