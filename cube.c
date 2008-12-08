@@ -4,6 +4,10 @@
 
 const char cube_solved[] = "nnbyonnnnyonnnnyognnbynnnnnyngnrbynnnrnynnnrnyngnnbnonnnnnognrbnnnnrnnngwnbnonwnnnonwnnnogwnbnnnwnnnngwrbnnnwrnnnnwrnnng";
 
+/*
+ * Avoids: Turning the same face in any direction that was just turned.
+ * Also: for turns on the back, right, or bottom, avoids turns on the opposite
+ * face.
 const long cube_turn_avoid[] = {
                              /* |17<----------->0| */
                     0010101, /* 000001000001000001 */
