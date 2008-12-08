@@ -18,4 +18,4 @@ tags: $(SRCS) $(HEADS)
 	ctags -R .
 
 clean:
-	-rm -f *.o
+	-rm -f *.o main
