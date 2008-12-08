@@ -7,6 +7,10 @@
 #include "stack.h"
 #include "cube.h"
 
+/*
+ * See more comments in cornertable.h
+ */
+
 int corner_hash(const char *cubestr)
 {
     /* The seven relevant corner cubies.  These are NOT null terminated */

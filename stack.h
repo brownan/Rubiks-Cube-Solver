@@ -34,8 +34,8 @@ typedef struct BLOCK {
 
 /*
  * This structure holds stack specific information.
- * malloc enough space for this and pass a reference
- * to this to all stack methods
+ * malloc enough space for this, as a minimum set rightblock to null, and pass
+ * a reference to this to all stack methods
  */
 typedef struct {
     block *rightblock;
@@ -45,8 +45,8 @@ typedef struct {
 
 /*
  * This pushes a cube to the stack,
- * pass in a copy of the cube type, the turn used to produce this
- * cube, and the distance.  It will be pushed onto the stack
+ * pass in a ptr to the cube str, the turn used to produce this cube, and the
+ * distance.  It will be pushed onto the stack
  */
 int stack_push(stacktype *stack, const char *cube_to_append, int turn, int distance);
 
