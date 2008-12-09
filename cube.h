@@ -20,26 +20,25 @@
  * (g)reen)
  * and n for (n)one, indicating that side faces into the cube
  *
- * Cubies are numbered from 0 to 19 throughout the code, but are
- * labeled here as 1 through 20 (I'm not re-doing this ascii diagram) 
+ * Cubies are numbered from 0 to 19 throughout the code, as shown here 
  * (the old whichpos function used 1-20 numbers though)
-    6----7----8
+    5----6----7
     |         |\
-    4    Y    5 \
+    3    Y    4 \
     |         |  \
-    1----2----3   \
+    0----1----2   \
      \             \
-      \   11---R---12
+      \   10---R---11
        \  |         |\
         \ B    X    G \
          \|         |  \
-          9----O---10   \
+          8----O----9   \
            \             \
-            \   18--19---20
+            \   17--18---19
              \  |         |
-              \ 16   W   17
+              \ 15   W   16
                \|         |
-                13--14---15
+                12--13---14
 
  */
 #define CUBELEN 140
