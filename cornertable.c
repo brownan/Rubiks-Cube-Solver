@@ -343,7 +343,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
         if ((popcount & 0777777) == 0777777) {
             fprintf(stderr, "\r%d/88179840 hashed, on level:%d/11, total traversed:%d ", count, depth, popcount);
         }
-#if 1
+#ifdef PROFILE_MODE
         /* For profiling, so I don't have to wait an hour to gather data */
         if (count == 10000000) {
             return 0;
