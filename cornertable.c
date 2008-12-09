@@ -23,21 +23,33 @@ int corner_hash(const char *cubestr)
     char cb7[6];
     
     
-    char positions[] = {1,3,6,8,13,15,18,20};
+    char positions[] = {0,2,5,7,12,14,17,19};
     int index = 0;
     int pos, rot,num, i;
 
-    memcpy(cb1, cubestr+0, 6);
-    memcpy(cb2, cubestr+12, 6);
-    memcpy(cb3, cubestr+30, 6);
-    memcpy(cb4, cubestr+42, 6);
-    memcpy(cb5, cubestr+72, 6);
-    memcpy(cb6, cubestr+84, 6);
-    memcpy(cb7, cubestr+102, 6);
+    memcpy(cb1, CUBIE(cubestr, 0), 6);
+    memcpy(cb2, CUBIE(cubestr,2), 6);
+    memcpy(cb3, CUBIE(cubestr,5), 6);
+    memcpy(cb4, CUBIE(cubestr,7), 6);
+    memcpy(cb5, CUBIE(cubestr,12), 6);
+    memcpy(cb6, CUBIE(cubestr,14), 6);
+    memcpy(cb7, CUBIE(cubestr,17), 6);
     
     /* First cubie */
-    /* whichpos returns the position id of this cubie */
-    num = whichpos(cb1);
+    /* Now just looks at the stored cubie id of this cubie */
+    num = *(CUBIE(cubestr,0) - 1);
+#ifdef DEBUG_ASSERTS
+    {
+        int wp = whichpos(cb1);
+        if (num != wp - 1) {
+            fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+            fprintf(stderr, "whichpos: %d\n", wp);
+            index = *((int *)0x0); /* sigsev */
+        }
+    }
+#endif
+
+
     pos=0;
     /* Find its index in positions array.  In this case, it's
      * a number 0-7, for the next it's 0-6, and so fourth */
@@ -82,7 +94,13 @@ int corner_hash(const char *cubestr)
      */
     
     /* second */
-    num = whichpos(cb2);
+    num = *(CUBIE(cubestr,2) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb2) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -106,7 +124,13 @@ int corner_hash(const char *cubestr)
     index += (pos + rot*7) * 174960;
     
     /* third */
-    num = whichpos(cb3);
+    num = *(CUBIE(cubestr,5) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb3) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -130,7 +154,13 @@ int corner_hash(const char *cubestr)
     index += (pos + rot*6) * 9720;
 
     /* fourth */
-    num = whichpos(cb4);
+    num = *(CUBIE(cubestr,7) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb4) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -154,7 +184,13 @@ int corner_hash(const char *cubestr)
     index += (pos + rot*5) * 648;
 
     /* fifth */
-    num = whichpos(cb5);
+    num = *(CUBIE(cubestr,12) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb5) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -178,7 +214,13 @@ int corner_hash(const char *cubestr)
     index += (pos + rot*4) * 54;
 
     /* sixth */
-    num = whichpos(cb6);
+    num = *(CUBIE(cubestr,14) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb6) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -202,7 +244,13 @@ int corner_hash(const char *cubestr)
     index += (pos + rot*3) * 6;
 
     /* seventh */
-    num = whichpos(cb7);
+    num = *(CUBIE(cubestr,17) - 1);
+#ifdef DEBUG_ASSERTS
+    if (num != whichpos(cb7) - 1) {
+        fprintf(stderr, "\nWARNING: num != whichpos!!!\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     pos=0;
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
@@ -223,6 +271,12 @@ int corner_hash(const char *cubestr)
     else rot = 2;
     index += (pos + rot*2);
     
+#ifdef DEBUG_ASSERTS
+    if (index >= 88179840) {
+        fprintf(stderr, "\nWARNING: HASH RETURNED %d\n", index);
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
     return index;
 
 }
@@ -245,7 +299,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
 {
     stacktype *stack;
     /*
-     * qdata is a struct, holding 120 byte cube string 'cube_data',
+     * qdata is a struct, holding cube string 'cube_data',
      * an int representing the turn that was made, 'turn',
      * and an int representing the distance, 'distance'
      */
@@ -318,7 +372,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
                     continue;
                 }
 
-                memcpy(turned, current.cube_data, 120);
+                memcpy(turned, current.cube_data, CUBELEN);
                 cube_turn(turned, i);
 
                 /*

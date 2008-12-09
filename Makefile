@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-O2 -Wall -pedantic -Werror
+CFLAGS=-g -Wall -pedantic -Werror -DDEBUG_ASSERTS
 
 SRCS=cube.c stack.c common.c cornertable.c main.c
 HEADS=cube.h stack.h common.h cornertable.h

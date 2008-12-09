@@ -18,7 +18,7 @@
 
 /*
  * corner_hash
- * Input: a 120 byte cube string
+ * Input: a cube string
  * Output: An integer in the range 0 to 88179840-1
  */
 int corner_hash(const char *cubetohash);

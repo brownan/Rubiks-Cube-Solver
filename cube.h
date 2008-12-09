@@ -20,8 +20,9 @@
  * (g)reen)
  * and n for (n)one, indicating that side faces into the cube
  *
- * Cubies are numbered from 0 to 19 
- * Cube numbers are as follows (subtract 1):
+ * Cubies are numbered from 0 to 19 throughout the code, but are
+ * labeled here as 1 through 20 (I'm not re-doing this ascii diagram) 
+ * (the old whichpos function used 1-20 numbers though)
     6----7----8
     |         |\
     4    Y    5 \
@@ -41,7 +42,8 @@
                 13--14---15
 
  */
-typedef char cube_type[7*20];
+#define CUBELEN 140
+typedef char cube_type[CUBELEN];
 
 /*
  * Default "solved" cube definition
@@ -49,10 +51,10 @@ typedef char cube_type[7*20];
 extern const char cube_solved[];
 
 /*
- * This macro is used to return a pointer into a cube type for the given
- * cubie (sub-cube)
+ * This macro is used to return a pointer into a cube type for the given cubie
+ * (sub-cube). Does not include the cubie id byte
  */
-#define CUBIE(cube, n) ((char *)cube + (n*6))
+#define CUBIE(cube, n) ((char *)cube + (n*7) +1)
 
 /*
  * Defines cube sides, they go in this order

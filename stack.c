@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "stack.h"
+#include "cube.h"
 
 /*
  * See stack.h for more info on this stuff
@@ -12,7 +13,7 @@
  * This should also consider a newly initialized stack, hopefully done with
  * calloc.  We can tell when stack->rightindex is null
  *
- * Copies the 120 length string given by cube_to_append
+ * Copies the cube string given by cube_to_append
  *
  * Returns 1 on success, 0 on failure
  */
@@ -37,7 +38,7 @@ int stack_push(stacktype *stack, const char *cube_to_append, int turn, int dista
     stack->rightindex++;
     /* Now copy data in */
     newq = &(stack->rightblock->data[stack->rightindex]);
-    memcpy(newq->cube_data, cube_to_append, 120);
+    memcpy(newq->cube_data, cube_to_append, CUBELEN);
     newq->turn = turn;
     newq->distance = distance;
     return 1;
@@ -64,7 +65,7 @@ int stack_pop(stacktype *stack)
 
 int stack_peek_cube(stacktype *stack, cube_type *targetcube)
 {
-    memcpy(targetcube, stack->rightblock->data[stack->rightindex].cube_data, 120);
+    memcpy(targetcube, stack->rightblock->data[stack->rightindex].cube_data, CUBELEN);
     return 1;
 }
 int stack_peek_turn(stacktype *stack)
