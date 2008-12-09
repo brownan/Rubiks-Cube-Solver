@@ -20,6 +20,8 @@
  * corner_hash
  * Input: a cube string
  * Output: An integer in the range 0 to 88179840-1
+ *
+ * This method is quite expensive.  Try to refrain calling it unless necessary
  */
 int corner_hash(const char *cubetohash);
 
