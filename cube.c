@@ -70,27 +70,29 @@ static char turn_position_lookup[20][18] = {
 /*
  * Turns the cube.  See comments by declaration in cube.h for more details
  */
-char *cube_turn(char *to_twist, int dir)
+char *cube_turn(char *to_twist, int turn)
 {
     int turndir;
     char temp;
     int i;
+    int face;
     int swap[4];
     char *cubie;
 
-    if (dir >= 12) {
+    if (turn >= 12) {
         /* half turn */
         turndir = 2;
-        dir -= 12;
-    } else if (dir >= 6) {
+        face = turn - 12;
+    } else if (turn >= 6) {
         /* CC-wise turn */
         turndir = -1;
-        dir -= 6;
+        face = turn - 6;
     } else {
         /* C-wise turn */
         turndir = 1;
+        face = turn;
     }
-    switch (dir) {
+    switch (face) {
         case 0:
             swap[0] = TOP;
             swap[1] = RIGHT;
@@ -140,7 +142,7 @@ char *cube_turn(char *to_twist, int dir)
     if (turndir == 1) {
         for (i=0; i<20; i++) {
             cubie = CUBIE(to_twist, i);
-            if (cubie[dir] != 'n') {
+            if (cubie[face] != 'n') {
                 /* Turn this cubie clockwise */
                 temp = cubie[swap[0]];
                 cubie[swap[0]] = cubie[swap[3]];
@@ -148,13 +150,13 @@ char *cube_turn(char *to_twist, int dir)
                 cubie[swap[2]] = cubie[swap[1]];
                 cubie[swap[1]] = temp;
                 /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][dir];
+                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
             }
         }
     } else if (turndir == -1) {
         for (i=0; i<20; i++) {
             cubie = CUBIE(to_twist, i);
-            if (cubie[dir] != 'n') {
+            if (cubie[face] != 'n') {
                 /* Turn this cubie counter-clockwise */
                 temp = cubie[swap[0]];
                 cubie[swap[0]] = cubie[swap[1]];
@@ -162,13 +164,13 @@ char *cube_turn(char *to_twist, int dir)
                 cubie[swap[2]] = cubie[swap[3]];
                 cubie[swap[3]] = temp;
                 /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][dir+6];
+                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
             }
         }
-    } else if (turndir == 2) {
+    } else {
         for (i=0; i<20; i++) {
             cubie = CUBIE(to_twist, i);
-            if (cubie[dir] != 'n') {
+            if (cubie[face] != 'n') {
                 /* Turn this cubie twice */
                 temp = cubie[swap[0]];
                 cubie[swap[0]] = cubie[swap[1]];
@@ -181,7 +183,7 @@ char *cube_turn(char *to_twist, int dir)
                 cubie[swap[2]] = cubie[swap[3]];
                 cubie[swap[3]] = temp;
                 /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][dir+12];
+                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
             }
         }
     }
