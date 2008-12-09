@@ -3,6 +3,10 @@
 /*
  * See more comments in common.h
  */
+
+/*
+ * This function is depricated, see common.h for more info
+ */
 int whichpos(char *cubie)
 {
     /* Takes a 6 character cubie string and returns which cubie it is,

@@ -2,39 +2,47 @@
 #define CUBE_H
 
 /**
- * The cube type.  This is made up of a 120 length string, with
- * each character being a color:
+ * The cube type.  This is made up of a 140 length string, broken up into
+ * substrings of length 7, one substring for each of the 20 cubies as shown in
+ * the diagram below.
+ * Each substring consists of:
+ * 1) an integer between 0 and 19 indicating its position (the chart below is
+ * off by 1) 
+ * 2) 6 characters indicating the colors on the front, top, left, back, bottom,
+ * and right sides respectively
+ *
+ * each color character is one of:
  * (w)hite
  * (r)ed
  * (b)lue
  * (y)ellow
  * (o)range
  * (g)reen)
- * and n for (n)one
+ * and n for (n)one, indicating that side faces into the cube
  *
- * Cubies are numbered from 0 to 19 (each cubie gets 6 characters for the
- * front, top, left, back, bottom, right sides respectively)
- * Cube numbers are as follows:
-    6----7----8
+ * Cubies are numbered from 0 to 19 throughout the code, as shown here 
+ * (the old whichpos function used 1-20 numbers though)
+    5----6----7
     |         |\
-    4    Y    5 \
+    3    Y    4 \
     |         |  \
-    1----2----3   \
+    0----1----2   \
      \             \
-      \   11---R---12
+      \   10---R---11
        \  |         |\
         \ B    X    G \
          \|         |  \
-          9----O---10   \
+          8----O----9   \
            \             \
-            \   18--19---20
+            \   17--18---19
              \  |         |
-              \ 16   W   17
+              \ 15   W   16
                \|         |
-                13--14---15
+                12--13---14
 
  */
-typedef char cube_type[6*20];
+#define CUBELEN 140
+typedef char cube_type[CUBELEN];
 
 /*
  * Default "solved" cube definition
@@ -42,10 +50,10 @@ typedef char cube_type[6*20];
 extern const char cube_solved[];
 
 /*
- * This macro is used to return a pointer into a cube type for the given
- * cubie (sub-cube)
+ * This macro is used to return a pointer into a cube type for the given cubie
+ * (sub-cube). Does not include the cubie id byte
  */
-#define CUBIE(cube, n) ((char *)cube + (n*6))
+#define CUBIE(cube, n) ((char *)cube + (n*7) +1)
 
 /*
  * Defines cube sides, they go in this order
