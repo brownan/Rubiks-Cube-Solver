@@ -314,8 +314,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
 
 
     /* Create a stack */
-    stack = malloc(sizeof(stacktype));
-    stack->rightblock = NULL; /* so it knows it's empty */
+    stack = STACK_NEW;
 
     /* create a temporary table to keep track of the stack */
     instack = CORNER_TABLE_NEW;

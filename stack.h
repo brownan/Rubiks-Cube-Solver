@@ -44,6 +44,11 @@ typedef struct {
 } stacktype;
 
 /*
+ * Returns a newly allocated stacktype.  Use this to make a new stack
+ */
+#define STACK_NEW calloc(sizeof(stacktype), 1)
+
+/*
  * This pushes a cube to the stack,
  * pass in a ptr to the cube str, the turn used to produce this cube, and the
  * distance.  It will be pushed onto the stack
