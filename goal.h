@@ -19,4 +19,11 @@ int goal_solve(const char *scrambled, const char *solved,
  */
 #define GOAL_MAXDEPTH 25
 
+/*
+ * TODO:
+ * Make a function that takes a pointer to the path array,
+ * and prints to stdout a nice formatted sequence of turns, with
+ * letters and all
+ */
+
 #endif
