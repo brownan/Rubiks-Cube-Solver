@@ -41,7 +41,6 @@ const long cube_turn_avoid[] = {
  * The first dimension goes from 0 to 19 representing the old position id
  * The second dimension ranges from 0 to 17 for the turn being performed
  * The value in the table is the new position.
- * XXX Values in table are off by 1 (should subtract 1) OOPS
  */
 static char turn_position_lookup[20][18] = {
             /* clockwise */  /* counter */  /* half-turn */
@@ -66,6 +65,12 @@ static char turn_position_lookup[20][18] = {
             { 16,10,18,18,18,18, 15,11,18,18,18,18, 13,6,18,18,18,18},
             { 14,17,19,19,19,7,  17,7,19,19,19,14,  12,5,19,19,19,2},
 };
+
+/*
+ * TODO
+ * Make a table of turn ids to cubies that are on that face, so to avoid
+ * iterating over all cubies in cube_turn
+ */
 
 /*
  * Turns the cube.  See comments by declaration in cube.h for more details
