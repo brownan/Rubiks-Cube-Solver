@@ -22,6 +22,22 @@
  * Output: An integer in the range 0 to 88179840-1
  *
  * This method is quite expensive.  Try to refrain calling it unless necessary
+ *
+ * The general method is to process the first 7 of the 8 corner cubies.
+ * For the first corner cube, since it has 24 possible positions, the
+ * hash space is split into 24 even sections (3674160 elements long)
+ * A number is calculated 0 through 23 that represents which position
+ * the first corner cubie is in, and multiplied by 3674160, which becomes
+ * the index.
+ *
+ * Then the second corner cube is similar, except the remaining space (which
+ * is 3674160 elements long) is split into 21 equal parts, since the second
+ * corner cubie has 21 possible positions.  That works out to 174960.  So,
+ * similarly, a number 0-20 is calculated and multiplied by 174960 and then
+ * added to the index.  This is repeated for each of the first 7 corner
+ * cubies. The eighth cubie has only 1 possible position, so it is not
+ * included in any calculations. (It cannot be rotated but one way since
+ * the cube would not be solvable)
  */
 int corner_hash(const char *cubetohash);
 

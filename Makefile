@@ -21,4 +21,4 @@ tags: $(SRCS) $(HEADS)
 	ctags -R .
 
 clean:
-	-rm -f *.o main
+	-rm -f *.o main *.gcno *.gcov *.gcda gmon.out
