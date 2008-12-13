@@ -86,12 +86,10 @@ int goal_solve(const char *scrambled, const char *solved,
         /*
          * Now, if the cube is at our current depth goal, check if it's
          * solved.
-         * If we're below current depth, add each turn (except skip tuple)
-         * to the stack.   If depth+heuristic is greater than
-         * our current depth, it will be thrown out.
          *
          * XXX Bug: Checking if each cubie is in the right position
          * doesn't necessarily mean the cube is solved
+         * (this may return some "solutions" that aren't actually solved
          */ 
         if (current.distance == depth) {
             /* is it solved? */
@@ -164,8 +162,9 @@ int goal_solve(const char *scrambled, const char *solved,
                  *                    to the goal
                  * h(x) NEVER UNDERESTIMATES THE GOAL! THIS IS KEY.
                  *      Since we KNOW that from here the goal is
-                 *      AT LEAST h(x) moves away, we can throw some
-                 *      turns away
+                 *      AT LEAST h(x) moves away, we maybe can throw
+                 *      this turn away depending on our current search
+                 *      depth
                  * 
                  * If f(x) is greater than depth (our current threshold of
                  * search for the iterative deepening A* search) then we don't
@@ -202,6 +201,8 @@ int goal_solve(const char *scrambled, const char *solved,
              * 1. Sort the turns_sorted and heuristics array descending by the
              * heuristic, and then
              * 2. add them in order to the stack.
+             *
+             * XXX MAKE SURE THIS IS SORTING IN THE CORRECT ORDER!
              */
 
             /* Step 1 */
