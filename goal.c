@@ -1,8 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "stack.h"
 #include "cube.h"
+#include "goal.h"
+#include "cornertable.h"
 
 /*
  * as always, see the header file for more comments
@@ -18,21 +21,26 @@ int goal_solve(const char *scrambled, const char *solved,
     long popcount = 0; /* nodes traversed */
     
     qdata current;
-    cube_type turned;
     int i, j;
     stacktype *stack;
     int depth = -1;
 
     /*
-     * Vars declared used later by heuristics
+     * Vars declared used later by heuristics and turns
      */
+    /* Each turn is put into the next slot in here (turns[numturns]) */
     qdata turns[18];
-    int heuristics[18];
+    qdata *turns_sorted[18]; /* points to elements of turns[] */
+    int heuristics[18]; /* heuristics values of the corresponding elements */
+    /* If the turn isn't eliminated by any heuristic, this is incremented */
     int numturns;
+    /* for swapping */
+    qdata *tempqdata;
+    
+    /* Used to store the heuristic of the current turn */
     int heuristic;
-    /* int heu2; */
     int hash;
-    qdata temp;
+
     int f;
 
     /*
@@ -55,7 +63,7 @@ int goal_solve(const char *scrambled, const char *solved,
     {
         if (stack->length == 0)
         {
-            stack_push(stack, solution, -1, 0);
+            stack_push(stack, solved, -1, 0);
             depth++;
             fprintf(stderr, "Now searching depth %d, total ndoes expanded: %ld,"
                     " nodes traversed: %ld\n", depth, nodecount, popcount);
@@ -83,7 +91,7 @@ int goal_solve(const char *scrambled, const char *solved,
         if (current.distance == depth) {
             /* is it solved? */
             for (i=0; i<20; i+=1) {
-                if (current.cube_type[i*7] != i)
+                if (current.cube_data[i*7] != i)
                     break;
             }
             if (i == 20) {
@@ -113,14 +121,16 @@ int goal_solve(const char *scrambled, const char *solved,
                 /*
                  * make a copy for this turn and turn it
                  */
-                memcpy(turned, current.cube_data, CUBELEN);
-                cube_turn(turned, i);
+                memcpy(turns[numturns].cube_data, current.cube_data, CUBELEN);
+                cube_turn(turns[numturns].cube_data, i);
+                turns[numturns].turn = i;
+                turns_sorted[numturns] = &turns[numturns];
 
                 /*
                  * Now get the heuristic value for this cube
                  */
                 heuristic = 0;
-                hash = corner_hash(turned);
+                hash = corner_hash(turns[numturns].cube_data);
                 heuristic = (hash&1 ? \
                         (cornertable[(hash-1)/2] >> 4) : \
                         (cornertable[hash/2] & 15) );
@@ -155,7 +165,7 @@ int goal_solve(const char *scrambled, const char *solved,
                  * search for the iterative deepening A* search) then we don't
                  * add it to the stack. BAM!
                  */
-                int f = heuristic + current.distance + 1;
+                f = heuristic + current.distance + 1;
                 if (f > depth) {
                     /* 
                      * Skip the rest of this
@@ -173,18 +183,38 @@ int goal_solve(const char *scrambled, const char *solved,
                  * may or may not be worth the time it takes.
                  */
                 heuristics[numturns] = f;
-                turns[numturns].cube_data = 
-                /*
-                 * Note to self: I'm stopping here for now.  I want to
-                 * re-work this since the existing code calls uses pointers
-                 * and isn't expensive, but here, qdata holds the actual
-                 * cube string.
-                 * I need to re-think this somehow.  I'm thinking putting the
-                 * turns right into the qdata array as they're generated
-                 * (overwriting them if we need to prune them), and then
-                 * sorting an array of pointers to the qdatas?
-                 * I'll do this later
-                 */
+                ++numturns;
+            }
+
+            /*
+             * Now we have numturns number of elements in the turns array, with
+             * turns_sorted corresponding pointers to each one, and
+             * corresponding heuristics in the heuristics array.
+             * 
+             * Below:
+             * 1. Sort the turns_sorted and heuristics array descending by the
+             * heuristic, and then
+             * 2. add them in order to the stack.
+             */
+
+            /* Step 1 */
+            for (i=1; i<numturns; i++) {
+                tempqdata = turns_sorted[i];
+                heuristic = heuristics[i]; /* repurposed: temp var */
+                j = i - 1;
+                while (j >= 0 && heuristics[j] < heuristic) {
+                    turns_sorted[j+1] = turns_sorted[j];
+                    heuristics[j+1] = heuristics[j];
+                    --j;
+                }
+                turns_sorted[j+1] = tempqdata;
+                heuristics[j+1] = heuristic;
+            }
+
+            /* step 2: add to stack */
+            for (i=0; i<numturns; ++i) {
+                stack_push(stack, turns_sorted[i]->cube_data, turns_sorted[i]->turn,
+                        current.distance+1);
             }
         }
     }

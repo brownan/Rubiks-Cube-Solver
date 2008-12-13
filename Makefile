@@ -4,7 +4,7 @@ CFLAGS=-Wall -pedantic -Werror -O3
 
 SRCS=cube.c stack.c common.c cornertable.c main.c goal.c
 HEADS=cube.h stack.h common.h cornertable.h goal.h
-OBJS=cube.o stack.o common.o cornertable.o #goal.o
+OBJS=cube.o stack.o common.o cornertable.o goal.o
 
 all: main tags
 
