@@ -25,8 +25,8 @@ int solve(char *tosolve)
     cube_type tosolve_converted;
     input = fopen("table_corner.rht", "r");
     corner_table = CORNER_TABLE_NEW;
-    if (fread(corner_table, 1, 44089920, input) != 44089920)
-        exit(1);
+    if (!corner_read(corner_table, input))
+        return 0;
 
     cube_120convert(tosolve, tosolve_converted);
     goal_solve(tosolve_converted, NULL, corner_table); 
