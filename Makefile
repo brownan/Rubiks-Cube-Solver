@@ -10,8 +10,9 @@ all: main tags
 
 cleanall: clean all
 
-# objects depend on all headers, as well as their own source file
-$(OBJS): $(HEADS)
+# objects depend on all headers, as well as their own source file (implied)
+# also, remake if the makefile itself changes
+$(OBJS): $(HEADS) Makefile
 
 # main depends on all objects, and its own source
 main: $(OBJS) main.c
