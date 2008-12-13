@@ -2,26 +2,16 @@
 #define CUBE_H
 
 /**
- * The cube type.  This is made up of a 140 length string, broken up into
- * substrings of length 7, one substring for each of the 20 cubies as shown in
+ * The cube type.  This is made up of a 40 byte string, broken up into
+ * substrings of length 2, one substring for each of the 20 cubies as shown in
  * the diagram below.
  * Each substring consists of:
  * 1) an integer between 0 and 19 indicating its position (the chart below is
  * off by 1) 
- * 2) 6 characters indicating the colors on the front, top, left, back, bottom,
- * and right sides respectively
- *
- * each color character is one of:
- * (w)hite
- * (r)ed
- * (b)lue
- * (y)ellow
- * (o)range
- * (g)reen)
- * and n for (n)one, indicating that side faces into the cube
+ * 2) an integer between 0 and 2 for corner cubies and between 0 and 1 for edge
+ * cubies indicating the rotation of that piece
  *
  * Cubies are numbered from 0 to 19 throughout the code, as shown here 
- * (the old whichpos function used 1-20 numbers though)
     5----6----7
     |         |\
     3    Y    4 \
@@ -40,8 +30,23 @@
                \|         |
                 12--13---14
 
+ * Rotations are defined thusly:
+ * For corner cubies:
+ *  It is defined to have a rotation of 0 if the white or yellow face
+ *  of the cubie is facing front or back.
+ *  It is defined to have a rotation of 1 if the white or yellow face
+ *  of the cubie is facing left or right.
+ *  It is defined to have a rotation of 2 if the white or yellow face
+ *  of the cubie is facing up or down.
+ * For edge cubies:
+ *  All edge cubies have a rotation of 0 in their solved state.  The
+ *  rotation of an edge cubie is toggled when it is present on either
+ *  the left or the right face, and that face experiences a quarter turn.
+ *  Otherwise, the edge rotation remains the same.
+ *  (Try it, you cannot change the orientation of an edge piece without
+ *  rotating the left or right sides in quarter turns! Neat!)
  */
-#define CUBELEN 140
+#define CUBELEN 40
 typedef char cube_type[CUBELEN];
 
 /*
@@ -53,7 +58,7 @@ extern const char cube_solved[];
  * This macro is used to return a pointer into a cube type for the given cubie
  * (sub-cube). Does not include the cubie id byte
  */
-#define CUBIE(cube, n) ((char *)cube + (n*7) +1)
+#define CUBIE(cube, n) ((char *)cube + (n << 1))
 
 /*
  * Defines cube sides, they go in this order
@@ -67,7 +72,7 @@ extern const char cube_solved[];
 
 /*
  * This method takes a pointer to the traditional 120 byte cube
- * string, and a pointer to a cube_type where the new 140 byte
+ * string, and a pointer to a cube_type where the new 40 byte
  * cube will be put.
  */
 int cube_120convert(const char *input, char *output);
