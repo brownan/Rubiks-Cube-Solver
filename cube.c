@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 
 #include "cube.h"
+#include "common.h"
 
 const char cube_solved[] = "\x00nnbyon\x01nnnyon\x02nnnyog\x03nnbynn" \
                            "\x04nnnyng\x05nrbynn\x06nrnynn\x07nrnyng" \
@@ -66,11 +68,17 @@ static char turn_position_lookup[20][18] = {
             { 14,17,19,19,19,7,  17,7,19,19,19,14,  12,5,19,19,19,2},
 };
 
-/*
- * TODO
- * Make a table of turn ids to cubies that are on that face, so to avoid
- * iterating over all cubies in cube_turn
- */
+int cube_120convert(const char *input, char *output)
+{
+    int i;
+    for (i=0; i<20; ++i) {
+        /* copy the cubie string */
+        memcpy(CUBIE(output, i), input + (i * 6), 6);
+        /* put in the position byte */
+        CUBIE(output, i)[-1] = (char) whichpos(CUBIE(output, i));
+    }
+    return 1;
+}
 
 /*
  * Turns the cube.  See comments by declaration in cube.h for more details

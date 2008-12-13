@@ -43,11 +43,13 @@ int goal_solve(const char *scrambled, const char *solved,
 
     int f;
 
+
     /*
      * primitive stack to hold the solution
      */
     int path[GOAL_MAXDEPTH+1];
     path[0] = -1;
+
 
     /*
      * The stack
@@ -63,9 +65,9 @@ int goal_solve(const char *scrambled, const char *solved,
     {
         if (stack->length == 0)
         {
-            stack_push(stack, solved, -1, 0);
+            stack_push(stack, scrambled, -1, 0);
             depth++;
-            fprintf(stderr, "Now searching depth %d, total ndoes expanded: %ld,"
+            fprintf(stderr, "Now searching depth %d, total nodes expanded: %ld,"
                     " nodes traversed: %ld\n", depth, nodecount, popcount);
         }
 
@@ -87,6 +89,9 @@ int goal_solve(const char *scrambled, const char *solved,
          * If we're below current depth, add each turn (except skip tuple)
          * to the stack.   If depth+heuristic is greater than
          * our current depth, it will be thrown out.
+         *
+         * XXX Bug: Checking if each cubie is in the right position
+         * doesn't necessarily mean the cube is solved
          */ 
         if (current.distance == depth) {
             /* is it solved? */
@@ -101,8 +106,9 @@ int goal_solve(const char *scrambled, const char *solved,
                 printf("Solution found!\n");
                 i=0;
                 while (path[i] != -1)
-                    printf("%d  ", path[i]);
+                    printf("%d  ", path[i++]);
 
+                printf("\n");
                 goto solve_cleanup;
             }
         } else {
@@ -184,6 +190,7 @@ int goal_solve(const char *scrambled, const char *solved,
                  */
                 heuristics[numturns] = f;
                 ++numturns;
+                ++nodecount;
             }
 
             /*

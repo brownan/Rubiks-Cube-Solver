@@ -5,7 +5,7 @@
  */
 
 /*
- * This function is depricated, see common.h for more info
+ * See common.h for more info
  */
 int whichpos(char *cubie)
 {
@@ -21,45 +21,45 @@ int whichpos(char *cubie)
     }
     /* Just a big if statement will suffice: */
     if (ns[0]==0 && ns[1]==1 && ns[2]==5 && ns[3]==-1)
-        return 1;
+        return 0;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==2 && ns[3]==5)
-        return 2;
+        return 1;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==2 && ns[3]==-1)
-        return 3;
+        return 2;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==4 && ns[3]==5)
-        return 4;
+        return 3;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==2 && ns[3]==4)
-        return 5;
+        return 4;
     else if (ns[0]==0 && ns[1]==4 && ns[2]==5 && ns[3]==-1)
-        return 6;
+        return 5;
     else if (ns[0]==0 && ns[1]==2 && ns[2]==4 && ns[3]==5)
-        return 7;
+        return 6;
     else if (ns[0]==0 && ns[1]==2 && ns[2]==4 && ns[3]==-1)
-        return 8;
+        return 7;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==3 && ns[3]==5)
-        return 9;
+        return 8;
     else if (ns[0]==0 && ns[1]==1 && ns[2]==2 && ns[3]==3)
-        return 10;
+        return 9;
     else if (ns[0]==0 && ns[1]==3 && ns[2]==4 && ns[3]==5)
-        return 11;
+        return 10;
     else if (ns[0]==0 && ns[1]==2 && ns[2]==3 && ns[3]==4)
-        return 12;
+        return 11;
     else if (ns[0]==1 && ns[1]==3 && ns[2]==5 && ns[3]==-1)
-        return 13;
+        return 12;
     else if (ns[0]==1 && ns[1]==2 && ns[2]==3 && ns[3]==5)
-        return 14;
+        return 13;
     else if (ns[0]==1 && ns[1]==2 && ns[2]==3 && ns[3]==-1)
-        return 15;
+        return 14;
     else if (ns[0]==1 && ns[1]==3 && ns[2]==4 && ns[3]==5)
-        return 16;
+        return 15;
     else if (ns[0]==1 && ns[1]==2 && ns[2]==3 && ns[3]==4)
-        return 17;
+        return 16;
     else if (ns[0]==3 && ns[1]==4 && ns[2]==5 && ns[3]==-1)
-        return 18;
+        return 17;
     else if (ns[0]==2 && ns[1]==3 && ns[2]==4 && ns[3]==5)
-        return 19;
+        return 18;
     else if (ns[0]==2 && ns[1]==3 && ns[2]==4 && ns[3]==-1)
-        return 20;
+        return 19;
     
     return -1;
 }

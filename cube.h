@@ -66,6 +66,13 @@ extern const char cube_solved[];
 #define RIGHT 5
 
 /*
+ * This method takes a pointer to the traditional 120 byte cube
+ * string, and a pointer to a cube_type where the new 140 byte
+ * cube will be put.
+ */
+int cube_120convert(const char *input, char *output);
+
+/*
  * Cube Twists:
  * Twists are numbered from 0 to 17, there are 18 possible twists.
  * 0 through 5 are 90 degree clockwise twists of each of the faces (in order)
