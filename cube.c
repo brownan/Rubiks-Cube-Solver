@@ -4,11 +4,11 @@
 #include "cube.h"
 #include "common.h"
 
-const char cube_solved[] = "\x00nnbyon\x01nnnyon\x02nnnyog\x03nnbynn" \
-                           "\x04nnnyng\x05nrbynn\x06nrnynn\x07nrnyng" \
-                           "\x08nnbnon\x09nnnnog\x0Anrbnnn\x0Bnrnnng" \
-                           "\x0Cwnbnon\x0Dwnnnon\x0Ewnnnog\x0Fwnbnnn" \
-                           "\x10wnnnng\x11wrbnnn\x12wrnnnn\x13wrnnng";
+const cube_type cube_solved =  "\x00\x00" "\x01\x00" "\x02\x00" "\x03\x00" \
+                               "\x04\x00" "\x05\x00" "\x06\x00" "\x07\x00" \
+                               "\x08\x00" "\x09\x00" "\x0A\x00" "\x0B\x00" \
+                               "\x0C\x00" "\x0D\x00" "\x0E\x00" "\x0F\x00" \
+                               "\x10\x00" "\x11\x00" "\x12\x00" "\x13\x00";
 
 /*
  * Avoids: Turning the same face in any direction that was just turned.

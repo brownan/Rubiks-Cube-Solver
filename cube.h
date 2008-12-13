@@ -6,8 +6,7 @@
  * substrings of length 2, one substring for each of the 20 cubies as shown in
  * the diagram below.
  * Each substring consists of:
- * 1) an integer between 0 and 19 indicating its position (the chart below is
- * off by 1) 
+ * 1) an integer between 0 and 19 indicating its position
  * 2) an integer between 0 and 2 for corner cubies and between 0 and 1 for edge
  * cubies indicating the rotation of that piece
  *
