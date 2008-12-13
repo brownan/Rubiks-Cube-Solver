@@ -19,6 +19,12 @@
  * useful for doing an initial translation
  *
  */
-int whichpos(char *cubie);
+int whichpos(const char *cubie);
+
+/*
+ * Whichrot takes a 6 character string and determines what its rotation is.
+ * See cube.h for information on how cubie rotations are defined
+ */
+int whichrot(const char *cubie);
 
 #endif

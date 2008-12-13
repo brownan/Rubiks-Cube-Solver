@@ -7,7 +7,7 @@
 /*
  * See common.h for more info
  */
-int whichpos(char *cubie)
+int whichpos(const char *cubie)
 {
     /* Takes a 6 character cubie string and returns which cubie it is,
      * one through twenty.  cubie is NOT null terminated (this func only
@@ -62,4 +62,71 @@ int whichpos(char *cubie)
         return 19;
     
     return -1;
+}
+
+/* This is also expensive, should not be called in main loop */
+int whichrot(const char *cubie)
+{
+    char cols[2]; /* used for edge cubies */
+    char tmp;
+    int i, j;
+    int pos = whichpos(cubie);
+    if (pos == 0 || pos == 2 || pos == 5 || pos == 7 || 
+            pos == 12 || pos == 14 || pos == 17 || pos == 19) {
+        /* Corner cubie */
+        if (cubie[FRONT] == 'w' || cubie[FRONT] == 'y' ||
+                cubie[BACK] == 'w' || cubie[BACK] == 'y') {
+            return 0;
+        } else if (cubie[LEFT] == 'w' || cubie[LEFT] == 'y' ||
+                cubie[RIGHT] == 'w' || cubie[RIGHT] == 'y') {
+            return 1;
+        } else if (cubie[UP] == 'w' || cubie[UP] == 'y' ||
+                cubie[DOWN] == 'w' || cubie[DOWN] == 'y') {
+            return 2;
+        } else {
+            fprintf(stderr, "Caution: whichrot error __LINE__\n");
+            return -1;
+        }
+            
+    } else {
+        /* Edge cubie */
+        j=0;
+        for (i=0; i<6; ++i){
+            if (cubie[i] != 'n') {
+                cols[j++] = cubie[i];
+            }
+        }
+        /*
+         * Put white or yellow in the first col.
+         * If there's no white or yellow, put blue or green first
+         */
+        if (cols[1] == 'w' || cols[1] == 'y') {
+            tmp = cols[1];
+            cols[1] = cols[0];
+            cols[0] = tmp;
+        } else if ((cols[0] != 'w' && cols[0] != 'y') && 
+                (cols[1] == 'b' || cols[1] == 'g')) {
+            tmp = cols[1];
+            cols[1] = cols[0];
+            cols[0] = tmp;
+        } else {
+            fprintf(stderr, "Something has gone horribly wrong in whichrot __LINE__\n");
+            return -1;
+        }
+
+        if (cols[0] == 'w' || cols[0] == 'y') {
+            /* 
+             * white/yellow case 
+             * if white/yellow is on the front or back, or if the other color is
+             * on the top or bottom, we know it's oriented 0
+             * otherwise, 1
+             */
+            if (cubie[TOP] == cols[1] || cubie[DOWN] == cols[1] ||
+                    cubie[FRONT] == cols[0] || cubie[BACK] == cols[0]) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+    }
 }
