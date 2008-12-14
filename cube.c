@@ -155,7 +155,7 @@ char *cube_turn(char *to_twist, int turn)
         rotamt = 1;
         face = turn;
     }
-    for (i=0,c=0; i<20 && c<4; ++i) {
+    for (i=0,c=0; i<20 && c<8; ++i) {
         /* turn each cubie */
         cubie = CUBIE(to_twist,i);
         if (turn_this_cubie[(int)cubie[0]][face]) {
@@ -202,8 +202,13 @@ char *cube_turn(char *to_twist, int turn)
                 /* now update position */
                 cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
             } else {
-                /* And it's an edge cubie */
-
+                /* it's an edge cubie */
+                switch (face) {
+                    case LEFT:
+                    case RIGHT:
+                        cubie[1] = (!cubie[1]);
+                }
+                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
             }
         }
     }
