@@ -35,6 +35,9 @@ int solve(char *tosolve)
 
 int main(int argc, char **argv)
 {
+    generate_tables();
+    /*
     solve(argv[1]);
+    */
     return 0;
 }

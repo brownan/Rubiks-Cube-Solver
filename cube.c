@@ -144,7 +144,7 @@ char *cube_turn(char *to_twist, int turn)
 
     if (turn >= 12) {
         /* half turn */
-        rotamt = 0; /* half turns don't change corner rotations */
+        rotamt = 0; /* half turns don't change rotations */
         face = turn - 12;
     } else if (turn >= 6) {
         /* CC-wise turn */
@@ -161,7 +161,11 @@ char *cube_turn(char *to_twist, int turn)
         if (turn_this_cubie[(int)cubie[0]][face]) {
             /* Yes, we're turning this one */
             ++c;
-            if (corner_cubies[i]) {
+            if (rotamt == 0) {
+                /* just update pos, no rotation */
+                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
+                continue;
+            } else if (corner_cubies[i]) {
                 /* And it's a corner cubie */
                 /* update rotation */
                 switch (face) {
@@ -171,9 +175,12 @@ char *cube_turn(char *to_twist, int turn)
                          * If rot is 0, no change 
                          * else, toggle between 1 and 2
                          */
-                        cubie[1] += rotamt;
-                        if (cubie[1] > 2) {
-                            cubie[1] = 1;
+                        switch (cubie[1]) {
+                            case 1:
+                                cubie[1] = 2;
+                                break;
+                            case 2:
+                                cubie[1] = 1;
                         }
                         break;
                     case TOP:
@@ -182,9 +189,12 @@ char *cube_turn(char *to_twist, int turn)
                          * if rot is 2, no change,
                          * else toggle between 0 and 1
                          */
-                        cubie[1] -= rotamt;
-                        if (cubie[1] < 0) {
-                            cubie[1] = 1;
+                        switch (cubie[1]) {
+                            case 0:
+                                cubie[1] = 1;
+                                break;
+                            case 1:
+                                cubie[1] = 0;
                         }
                         break;
                     case LEFT:
@@ -193,14 +203,15 @@ char *cube_turn(char *to_twist, int turn)
                          * if rot is 1, no change,
                          * else toggle between 0 and 2
                          */
-                        cubie[1] += rotamt << 1;
-                        if (cubie[1] > 2) {
-                            cubie[1] = 0;
+                        switch (cubie[1]) {
+                            case 0:
+                                cubie[1] = 2;
+                                break;
+                            case 2:
+                                cubie[1] = 0;
                         }
                         break;
                 }
-                /* now update position */
-                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
             } else {
                 /* it's an edge cubie */
                 switch (face) {
@@ -208,8 +219,9 @@ char *cube_turn(char *to_twist, int turn)
                     case RIGHT:
                         cubie[1] = (!cubie[1]);
                 }
-                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
             }
+            /* now update position */
+            cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
         }
     }
 
