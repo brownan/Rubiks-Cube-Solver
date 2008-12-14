@@ -7,9 +7,6 @@
  * See more comments in common.h
  */
 
-/*
- * See common.h for more info
- */
 int whichpos(const char *cubie)
 {
     /* Takes a 6 character cubie string and returns which cubie it is,
