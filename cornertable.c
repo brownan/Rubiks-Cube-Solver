@@ -33,17 +33,17 @@ int corner_hash(const char *cubestr)
     for (i=pos; i< 7; i++)
         positions[i] = positions[i+1];
     /* 3674160 = 21*18*15*12*9*6 */
-    /* max(pos+rot*8) = 24 */
+    /* pos+rot*8 has range 0 - 23 */
     /* so index after this line will be one one of the boundaries if the
      * hash space is split in 24 (24 places this cubie could go)
-     * remember hash space is
+     * remember total hash space is
      * 88179840 = 24*21*18*15*12*9*6
      */
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*8) * 3674160;
-    /* The next cubie will add to the index such that the remaining hash
-     * space (3674160) is split into 21 parts
-     * and so fourth
+    /* The next cubie will add to the index such that the remaining hash space
+     * (3674160) is split into 21 parts and so fourth (hence taking the pos out
+     * of the positions array, now pos can only be 0-6)
      */
     
     /* second */
@@ -55,7 +55,7 @@ int corner_hash(const char *cubestr)
                 that would be an error anyways. */
     for (i=pos; i< 6; i++)
         positions[i] = positions[i+1];
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*7) * 174960;
     
     /* third */
@@ -67,7 +67,7 @@ int corner_hash(const char *cubestr)
                 that would be an error anyways. */
     for (i=pos; i< 5; i++)
         positions[i] = positions[i+1];
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*6) * 9720;
 
     /* fourth */
@@ -79,7 +79,7 @@ int corner_hash(const char *cubestr)
                 that would be an error anyways. */
     for (i=pos; i< 4; i++)
         positions[i] = positions[i+1];
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*5) * 648;
 
     /* fifth */
@@ -91,7 +91,7 @@ int corner_hash(const char *cubestr)
                 that would be an error anyways. */
     for (i=pos; i< 3; i++)
         positions[i] = positions[i+1];
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*4) * 54;
 
     /* sixth */
@@ -103,7 +103,7 @@ int corner_hash(const char *cubestr)
                 that would be an error anyways. */
     for (i=pos; i< 2; i++)
         positions[i] = positions[i+1];
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*3) * 6;
 
     /* seventh */
@@ -113,7 +113,7 @@ int corner_hash(const char *cubestr)
     while (num != positions[pos])
         pos++; /* This will segfault if it falls off the end of the array.
                 that would be an error anyways. */
-    rot = CUBIE(cubestr, 0)[1]; /* 0 - 2 */
+    rot = cubie[1]; /* 0 - 2 */
     index += (pos + rot*2);
     
 #ifdef DEBUG_ASSERTS
