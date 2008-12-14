@@ -39,6 +39,8 @@
  * cubies. The eighth cubie has only 1 possible position, so it is not
  * included in any calculations. (It cannot be rotated but one way since
  * the cube would not be solvable)
+ *
+ * This method takes about 37 mins on my 2GHz Intel T7200
  */
 int corner_hash(const char *cubetohash);
 

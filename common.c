@@ -61,6 +61,9 @@ int whichpos(const char *cubie)
     else if (ns[0]==2 && ns[1]==3 && ns[2]==4 && ns[3]==-1)
         return 19;
     
+    fprintf(stderr, "WARNING, SOMETHING HAS GONE TERRIBLLY WRONG IN WHICHPOS %d\n", __LINE__);
+    fprintf(stderr, "%.6s\n", cubie);
+    fprintf(stderr, "%d, %d, %d, %d\n", ns[0], ns[1], ns[2], ns[3]);
     return -1;
 }
 
@@ -84,7 +87,7 @@ int whichrot(const char *cubie)
                 cubie[DOWN] == 'w' || cubie[DOWN] == 'y') {
             return 2;
         } else {
-            fprintf(stderr, "Caution: whichrot error __LINE__\n");
+            fprintf(stderr, "Caution: whichrot error %d\n", __LINE__);
             return -1;
         }
             
@@ -109,9 +112,6 @@ int whichrot(const char *cubie)
             tmp = cols[1];
             cols[1] = cols[0];
             cols[0] = tmp;
-        } else {
-            fprintf(stderr, "Something has gone horribly wrong in whichrot __LINE__\n");
-            return -1;
         }
 
         /* 
