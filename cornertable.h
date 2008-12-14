@@ -18,10 +18,11 @@
 
 /*
  * corner_hash
- * Input: a cube string
+ * Input: a cube_type string
  * Output: An integer in the range 0 to 88179840-1
  *
- * This method is quite expensive.  Try to refrain calling it unless necessary
+ * This method is hopefully now less expensive.  Calling is now encouraged!
+ * (just kidding)
  *
  * The general method is to process the first 7 of the 8 corner cubies.
  * For the first corner cube, since it has 24 possible positions, the
