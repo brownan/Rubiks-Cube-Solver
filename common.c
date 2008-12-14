@@ -1,4 +1,7 @@
+#include <stdio.h>
+
 #include "common.h"
+#include "cube.h"
 
 /*
  * See more comments in common.h
@@ -80,7 +83,7 @@ int whichrot(const char *cubie)
         } else if (cubie[LEFT] == 'w' || cubie[LEFT] == 'y' ||
                 cubie[RIGHT] == 'w' || cubie[RIGHT] == 'y') {
             return 1;
-        } else if (cubie[UP] == 'w' || cubie[UP] == 'y' ||
+        } else if (cubie[TOP] == 'w' || cubie[TOP] == 'y' ||
                 cubie[DOWN] == 'w' || cubie[DOWN] == 'y') {
             return 2;
         } else {
@@ -114,19 +117,25 @@ int whichrot(const char *cubie)
             return -1;
         }
 
-        if (cols[0] == 'w' || cols[0] == 'y') {
-            /* 
-             * white/yellow case 
-             * if white/yellow is on the front or back, or if the other color is
-             * on the top or bottom, we know it's oriented 0
-             * otherwise, 1
-             */
-            if (cubie[TOP] == cols[1] || cubie[DOWN] == cols[1] ||
-                    cubie[FRONT] == cols[0] || cubie[BACK] == cols[0]) {
-                return 0;
-            } else {
-                return 1;
-            }
+        /* 
+         * white/yellow case 
+         * if white/yellow is on the front or back, or if the other color is
+         * on the top or bottom, we know it's oriented 0
+         * otherwise, 1
+         *
+         * For the last four edge cubies (the four that don't have white or
+         * yellow on them) we check to see if green/blue is on the front or
+         * back, or if the other color is on the top or bottom.  Then it's
+         * 0.
+         *
+         * Therefore, thanks to the re-ordering done above, it's the same
+         * check:
+         */
+        if (cubie[TOP] == cols[1] || cubie[DOWN] == cols[1] ||
+                cubie[FRONT] == cols[0] || cubie[BACK] == cols[0]) {
+            return 0;
+        } else {
+            return 1;
         }
     }
 }
