@@ -67,8 +67,8 @@ int goal_solve(const char *scrambled, const char *solved,
         {
             stack_push(stack, scrambled, -1, 0);
             depth++;
-            fprintf(stderr, "Now searching depth %d, total nodes expanded: %ld,"
-                    " nodes traversed: %ld\n", depth, nodecount, popcount);
+            fprintf(stderr, "Searching depth %d, Nodes expanded: %ld,"
+                    " Nodes traversed: %ld\n", depth, nodecount, popcount);
         }
 
         /* pop */
