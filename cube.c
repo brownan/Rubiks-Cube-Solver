@@ -110,7 +110,6 @@ static char corner_cubies[] = {1,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,0,1};
 int cube_120convert(const char *input, char *output)
 {
     int i;
-    input++;
     for (i=0; i<20; ++i) {
         /* put in the position byte */
         CUBIE(output, i)[0] = (char) whichpos(input+i*6);
