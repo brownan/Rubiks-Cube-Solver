@@ -70,26 +70,14 @@ extern const char cube_solved[];
 #define RIGHT 5
 
 /*
- * This method takes a pointer to the traditional 120 byte cube
- * string, and a pointer to a cube_type where the new 40 byte
- * cube will be put.
+ * This method takes a pointer to the traditional 120 byte cube string, and a
+ * pointer to a cube_type where the new cube type will be put.
  */
 int cube_120convert(const char *input, char *output);
 
 /*
- * Cube Twists:
- * Twists are numbered from 0 to 17, there are 18 possible twists.
- * 0 through 5 are 90 degree clockwise twists of each of the faces (in order)
- * Twists 6 through 11 are counterclockwise 90 degree twists of the
- * corresponding face (subtract 6 from the twist to get the face it operates
- * on)
- * And twists 12 through 17 are 180 degree twists of the corresponding face
- * (twist minus 12)
- *
- * Edits the cube string in-place
- *
- * Returns a pointer to the cube to_twist on success
- * null on failure
+ * Comments moved to cube.c.  Somewhere along the way I decided comments
+ * were more apt to be next to the definition, not declaration
  */
 char *cube_turn(char *to_twist, int direction);
 

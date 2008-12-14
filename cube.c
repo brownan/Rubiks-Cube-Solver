@@ -38,7 +38,8 @@ const long cube_turn_avoid[] = {
                     };
 
 /*
- * This table is used by cube_turn to determine the cubie numbers after a turn
+ * This table is used by cube_turn to determine the cubie position id after a
+ * turn
  * It is two dimensional:
  * The first dimension goes from 0 to 19 representing the old position id
  * The second dimension ranges from 0 to 17 for the turn being performed
@@ -68,135 +69,141 @@ static char turn_position_lookup[20][18] = {
             { 14,17,19,19,19,7,  17,7,19,19,19,14,  12,5,19,19,19,2},
 };
 
+/*
+ * I love tables.
+ * This table is for determining which cubies should be turned for any
+ * particular face turn.  The first dimension is the cubie you're considering,
+ * and the second dimenstion is the face of the cube being turned (0-5).
+ * The result is either a yes (1, turn this face), or a no (0, don't turn)
+ */
+static char turn_this_cubie[20][6] = {
+    /* 0 */ { 0,0,1,1,1,0 },
+            { 0,0,0,1,1,0 },
+            { 0,0,0,1,1,1 },
+            { 0,0,1,1,0,0 },
+            { 0,0,0,1,0,1 },
+    /* 5 */ { 0,1,1,1,0,0 },
+            { 0,1,0,1,0,0 },
+            { 0,1,0,1,0,1 },
+    /* 8 */ { 0,0,1,0,1,0 },
+            { 0,0,0,0,1,1 },
+            { 0,1,1,0,0,0 },
+            { 0,1,0,0,0,1 },
+    /* 12 */{ 1,0,1,0,1,0 },
+            { 1,0,0,0,1,0 },
+            { 1,0,0,0,1,1 },
+            { 1,0,1,0,0,0 },
+            { 1,0,0,0,0,1 },
+            { 1,1,1,0,0,0 },
+            { 1,1,0,0,0,0 },
+            { 1,1,0,0,0,1 }
+};
+
+/*
+ * I REALLY love tables (I have to think it beats a big if statement for things
+ * like this)
+ * This one maps cubie IDs to if it's a corner cubie or not
+ * 1 for yes, 0 for no
+ */
+static char corner_cubies[] = {1,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,0,1};
+
 int cube_120convert(const char *input, char *output)
 {
     int i;
+    input++;
     for (i=0; i<20; ++i) {
-        /* copy the cubie string */
-        memcpy(CUBIE(output, i), input + (i * 6), 6);
         /* put in the position byte */
-        CUBIE(output, i)[-1] = (char) whichpos(CUBIE(output, i));
+        CUBIE(output, i)[0] = (char) whichpos(input+i*6);
+        /* put in the rotation byte */
+        CUBIE(output, i)[1] = (char) whichrot(input+i*6);
     }
     return 1;
 }
 
 /*
- * Turns the cube.  See comments by declaration in cube.h for more details
+ * Cube Twists:
+ * Twists are numbered from 0 to 17, there are 18 possible twists.
+ * 0 through 5 are 90 degree clockwise twists of each of the faces (in order)
+ * Twists 6 through 11 are counterclockwise 90 degree twists of the
+ * corresponding face (subtract 6 from the twist to get the face it operates
+ * on)
+ * And twists 12 through 17 are 180 degree twists of the corresponding face
+ * (twist minus 12)
+ *
+ * Edits the cube string in-place
+ *
+ * Returns a pointer to the cube to_twist on success
+ * null on failure
  */
 char *cube_turn(char *to_twist, int turn)
 {
-    int turndir;
-    char temp;
-    int i;
+    int rotamt;
+    int i, c;
     int face;
-    int swap[4];
     char *cubie;
 
     if (turn >= 12) {
         /* half turn */
-        turndir = 2;
+        rotamt = 0; /* half turns don't change corner rotations */
         face = turn - 12;
     } else if (turn >= 6) {
         /* CC-wise turn */
-        turndir = -1;
+        rotamt = 1;
         face = turn - 6;
     } else {
         /* C-wise turn */
-        turndir = 1;
+        rotamt = 1;
         face = turn;
     }
-    switch (face) {
-        case 0:
-            swap[0] = TOP;
-            swap[1] = RIGHT;
-            swap[2] = DOWN;
-            swap[3] = LEFT;
-            break;
-        case 1:
-            swap[0] = BACK;
-            swap[1] = RIGHT;
-            swap[2] = FRONT;
-            swap[3] = LEFT;
-            break;
-        case 2:
-            swap[0] = TOP;
-            swap[1] = FRONT;
-            swap[2] = DOWN;
-            swap[3] = BACK;
-            break;
-        case 3:
-            swap[0] = TOP;
-            swap[1] = LEFT;
-            swap[2] = DOWN;
-            swap[3] = RIGHT;
-            break;
-        case 4:
-            swap[0] = FRONT;
-            swap[1] = RIGHT;
-            swap[2] = BACK;
-            swap[3] = LEFT;
-            break;
-        case 5:
-            swap[0] = TOP;
-            swap[1] = BACK;
-            swap[2] = DOWN;
-            swap[3] = FRONT;
-            break;
-        default:
-            /* To squelch warnings: */
-            swap[0] = 0;
-            swap[1] = 0;
-            swap[2] = 0;
-            swap[3] = 0;
-            fprintf(stderr, "WARNING: CUBE TURN SWITCH CASE RAN OFF DEFAULT\n");
-            break;
+    for (i=0,c=0; i<20 && c<4; ++i) {
+        /* turn each cubie */
+        cubie = CUBIE(to_twist,i);
+        if (turn_this_cubie[(int)cubie[0]][face]) {
+            /* Yes, we're turning this one */
+            ++c;
+            if (corner_cubies[i]) {
+                /* And it's a corner cubie */
+                /* update rotation */
+                switch (face) {
+                    case FRONT:
+                    case BACK:
+                        /* 
+                         * If rot is 0, no change 
+                         * else, toggle between 1 and 2
+                         */
+                        cubie[1] += rotamt;
+                        if (cubie[1] > 2) {
+                            cubie[1] = 1;
+                        }
+                        break;
+                    case TOP:
+                    case DOWN:
+                        /*
+                         * if rot is 2, no change,
+                         * else toggle between 0 and 1
+                         */
+                        cubie[1] -= rotamt;
+                        if (cubie[1] < 0) {
+                            cubie[1] = 1;
+                        }
+                        break;
+                    case LEFT:
+                    case RIGHT:
+                        /*
+                         * if rot is 1, no change,
+                         * else toggle between 0 and 2
+                         */
+                        cubie[1] += rotamt << 1;
+                        if (cubie[1] > 2) {
+                            cubie[1] = 0;
+                        }
+                        break;
+                }
+                /* now update position */
+                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
+            } else {
+                /* And it's an edge cubie */
 
-    }
-    if (turndir == 1) {
-        for (i=0; i<20; i++) {
-            cubie = CUBIE(to_twist, i);
-            if (cubie[face] != 'n') {
-                /* Turn this cubie clockwise */
-                temp = cubie[swap[0]];
-                cubie[swap[0]] = cubie[swap[3]];
-                cubie[swap[3]] = cubie[swap[2]];
-                cubie[swap[2]] = cubie[swap[1]];
-                cubie[swap[1]] = temp;
-                /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
-            }
-        }
-    } else if (turndir == -1) {
-        for (i=0; i<20; i++) {
-            cubie = CUBIE(to_twist, i);
-            if (cubie[face] != 'n') {
-                /* Turn this cubie counter-clockwise */
-                temp = cubie[swap[0]];
-                cubie[swap[0]] = cubie[swap[1]];
-                cubie[swap[1]] = cubie[swap[2]];
-                cubie[swap[2]] = cubie[swap[3]];
-                cubie[swap[3]] = temp;
-                /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
-            }
-        }
-    } else {
-        for (i=0; i<20; i++) {
-            cubie = CUBIE(to_twist, i);
-            if (cubie[face] != 'n') {
-                /* Turn this cubie twice */
-                temp = cubie[swap[0]];
-                cubie[swap[0]] = cubie[swap[1]];
-                cubie[swap[1]] = cubie[swap[2]];
-                cubie[swap[2]] = cubie[swap[3]];
-                cubie[swap[3]] = temp;
-                temp = cubie[swap[0]];
-                cubie[swap[0]] = cubie[swap[1]];
-                cubie[swap[1]] = cubie[swap[2]];
-                cubie[swap[2]] = cubie[swap[3]];
-                cubie[swap[3]] = temp;
-                /* update the cubie position byte */
-                cubie[-1] = turn_position_lookup[(int)cubie[-1]][turn];
             }
         }
     }
