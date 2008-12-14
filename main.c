@@ -29,15 +29,17 @@ int solve(char *tosolve)
         return 0;
 
     cube_120convert(tosolve, tosolve_converted);
-    goal_solve(tosolve_converted, NULL, corner_table); 
+    printf("Converted cube:\n");
+    cube_print(stdout,tosolve_converted);
+    goal_solve(tosolve_converted, cube_solved, corner_table); 
     return 1;
 }
 
 int main(int argc, char **argv)
 {
-    generate_tables();
     /*
-    solve(argv[1]);
+    generate_tables();
     */
+    solve(argv[1]);
     return 0;
 }

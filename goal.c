@@ -93,11 +93,7 @@ int goal_solve(const char *scrambled, const char *solved,
          */ 
         if (current.distance == depth) {
             /* is it solved? */
-            for (i=0; i<20; i+=1) {
-                if (current.cube_data[i*7] != i)
-                    break;
-            }
-            if (i == 20) {
+            if (memcmp(current.cube_data, solved, CUBELEN) == 0) {
                 /*
                  * DINGDINGDINGDING We've found a solution
                  */
