@@ -228,3 +228,16 @@ char *cube_turn(char *to_twist, int turn)
     return to_twist;
 }
     
+int cube_print(FILE *output, const char *cube)
+{
+    int i;
+    int c;
+    for (i=0,c=0; i<20; ++i,++c) {
+        fprintf(output, "%.2X,%.2X ", (unsigned int) cube[i<<1], (unsigned int) cube[(i<<1)+1]);
+        if (c == 7 || c == 11) {
+            fprintf(output, "\n");
+        }
+    }
+    fprintf(output, "\n\n");
+    return 1;
+}

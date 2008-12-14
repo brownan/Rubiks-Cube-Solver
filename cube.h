@@ -1,6 +1,8 @@
 #ifndef CUBE_H
 #define CUBE_H
 
+#include <stdio.h>
+
 /**
  * The cube type.  This is made up of a 40 byte string, broken up into
  * substrings of length 2, one substring for each of the 20 cubies as shown in
@@ -109,5 +111,12 @@ char *cube_turn(char *to_twist, int direction);
  * This is defined in cube.c, delcared here.
  */
 extern const long cube_turn_avoid[];
+
+/*
+ * I thought it'd be good to have a print method, since most debuggers try to
+ * interpret the characters literally Pass in the cube type, and the output
+ * stream
+ */
+int cube_print(FILE *output, const char *cube);
 
 #endif
