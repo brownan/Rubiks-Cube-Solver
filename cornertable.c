@@ -161,7 +161,14 @@ int corner_generate(unsigned char *cornertable, const char *solution)
     /* Create a stack */
     stack = STACK_NEW;
 
-    /* create a temporary table to keep track of the stack */
+    /*
+     * create a temporary table to keep track of the stack This holds the value
+     * of each item that has been added to the stack, and its distance.  This
+     * way, we know if we encounter the same node but at a further distance we
+     * can throw it away.  This heuristic cuts down on processing time by quite
+     * a bit, and is only as time intensive as the hashing algorithm, at the
+     * expense of using more memory.
+     */
     instack = CORNER_TABLE_NEW;
 
     depth = -1;

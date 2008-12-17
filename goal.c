@@ -86,10 +86,6 @@ int goal_solve(const char *scrambled, const char *solved,
         /*
          * Now, if the cube is at our current depth goal, check if it's
          * solved.
-         *
-         * XXX Bug: Checking if each cubie is in the right position
-         * doesn't necessarily mean the cube is solved
-         * (this may return some "solutions" that aren't actually solved
          */ 
         if (current.distance == depth) {
             /* is it solved? */
