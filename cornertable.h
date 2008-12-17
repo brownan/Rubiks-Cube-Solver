@@ -45,11 +45,6 @@
 int corner_hash(const char *cubetohash);
 
 /*
- * This gets the stored value from the table
- */
-char corner_lookup(const unsigned char *cornertable, const char *cubetohash);
-
-/*
  * Generates the corner heuristics table about the given solution, which
  * could be any valid cube
  */

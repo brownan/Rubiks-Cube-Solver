@@ -6,13 +6,16 @@
 #include "cube.h"
 #include "goal.h"
 #include "cornertable.h"
+#include "edgetable.h"
+#include "common.h"
 
 /*
  * as always, see the header file for more comments
  */
 
 int goal_solve(const char *scrambled, const char *solved,
-        const unsigned char *cornertable)
+        const unsigned char *cornertable,
+        const unsigned char *edgetable1)
 {
     /*
      * declaring all variables upfront
@@ -38,7 +41,7 @@ int goal_solve(const char *scrambled, const char *solved,
     qdata *tempqdata;
     
     /* Used to store the heuristic of the current turn */
-    int heuristic;
+    int heuristic, heu2;
     int hash;
 
     int f;
@@ -126,10 +129,11 @@ int goal_solve(const char *scrambled, const char *solved,
                  * Now get the heuristic value for this cube
                  */
                 heuristic = 0;
+
+                /*
                 hash = corner_hash(turns[numturns].cube_data);
-                heuristic = (hash&1 ? \
-                        (cornertable[(hash-1)/2] >> 4) : \
-                        (cornertable[hash/2] & 15) );
+                heuristic = TABLE_LOOKUP(cornertable, hash);
+                */
 #ifdef DEBUG_ASSERTS
                 if (heuristic < 0 || heuristic > 11) {
                     fprintf(stderr, "\nWARNING: CORNER HERUISTIC OUT OF BOUNDS\n");
@@ -144,6 +148,20 @@ int goal_solve(const char *scrambled, const char *solved,
                  *
                  * repeat as necessary
                  */
+                
+                /*
+                hash = edge_hash1(turns[numturns].cube_data);
+                heu2 = TABLE_LOOKUP(edgetable1, hash);
+                if (heu2 > heuristic)
+                    heuristic = heu2;
+                    */
+#ifdef DEBUG_ASSERTS
+                if (heu2 < 0 || heu2 > 10) {
+                    fprintf(stderr, "\nWARNING: EDGE HEURISTIC 1 OUT OF BOUNDS\n");
+                    hash = *((int *)0x0);
+                }
+#endif
+                
 
                 /* The turned node has distance-plus-cost value
                  * f(x) = g(x) + h(x)

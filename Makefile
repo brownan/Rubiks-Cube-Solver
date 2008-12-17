@@ -1,10 +1,14 @@
 CC=gcc
-CFLAGS=-Wall -pedantic -Werror -O3
-#CFLAGS=-fprofile-arcs -ftest-coverage -pg -DDEBUG_ASSERTS -DPROFILE_MODE
+CFLAGS=-Wall -pedantic -O3
+# Pick and choose debugging compiler flags:
+# -g  debugging
+# -fprofile-arcs -ftest-coverage -pg  profiling
+# -DDEBUG_ASSERTS turn on assertation  checks
+# -DPROFILE_MODE  stops program after 10mil hashed cubes in corner generation
 
-SRCS=cube.c stack.c common.c cornertable.c main.c goal.c
-HEADS=cube.h stack.h common.h cornertable.h goal.h
-OBJS=cube.o stack.o common.o cornertable.o goal.o
+SRCS=cube.c stack.c common.c cornertable.c main.c goal.c edgetable.c
+HEADS=cube.h stack.h common.h cornertable.h goal.h edgetable.h
+OBJS=cube.o stack.o common.o cornertable.o goal.o edgetable.o
 
 all: main tags
 

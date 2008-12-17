@@ -11,7 +11,8 @@
  * The solution is printed to standard out
  */
 int goal_solve(const char *scrambled, const char *solved,
-        const unsigned char *cornertable);
+        const unsigned char *cornertable,
+        const unsigned char *edgetable1);
 
 /*
  * Maximum depth to search for solutions

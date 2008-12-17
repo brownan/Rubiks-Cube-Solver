@@ -126,19 +126,6 @@ int corner_hash(const char *cubestr)
 
 }
 
-/*
- * This implementation is pretty simple.
- * I'm thinking it may be better to just copy+paste this to wherever you
- * need it, maybe it'll save a stack call or something, or maybe it won't
- * matter
- */
-char corner_lookup(const unsigned char *cornertable, const char *cubetohash)
-{
-    int hash = corner_hash(cubetohash);
-    return hash&1 ? cornertable[(hash-1)/2] >> 4 : \
-        cornertable[hash/2] & 15;
-}
-
 /* Returns 1 on success */
 int corner_generate(unsigned char *cornertable, const char *solution)
 {
@@ -262,6 +249,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
         stack_pop(stack);
     }
     free(stack);
+    fprintf(stderr, "\n");
     return 1;
 }
 
