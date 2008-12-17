@@ -19,7 +19,7 @@ main: $(OBJS) main.c
 	gcc $(CFLAGS) $(OBJS) main.c -o main
 
 tags: $(SRCS) $(HEADS)
-	ctags -R .
+	-ctags -R .
 
 clean:
 	-rm -f *.o main *.gcno *.gcov *.gcda gmon.out
