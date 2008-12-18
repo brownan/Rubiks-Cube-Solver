@@ -36,7 +36,7 @@ int make_edge(int t)
 int solve(char *tosolve)
 {
     FILE *input;
-    unsigned char *corner_table, *edge_table;
+    unsigned char *corner_table, *edge_table, *edge_table2;
     cube_type tosolve_converted;
 
     corner_table = CORNER_TABLE_NEW;
@@ -57,8 +57,18 @@ int solve(char *tosolve)
     }
     fclose(input);
 
+    edge_table2 = EDGE_TABLE_NEW;
+    input = fopen("table_edge2.rht", "r");
+    if (!edge_read(edge_table2, input)) {
+        printf("Warning: could not open second edge table\n");
+        free(edge_table2);
+        edge_table2 = NULL;
+    }
+    fclose(input);
+
     cube_120convert(tosolve, tosolve_converted);
-    goal_solve(tosolve_converted, cube_solved, corner_table, edge_table); 
+    goal_solve(tosolve_converted, cube_solved, corner_table, edge_table,
+            edge_table2); 
     return 1;
 }
 

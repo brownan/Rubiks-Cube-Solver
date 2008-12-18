@@ -15,7 +15,8 @@
 
 int goal_solve(const char *scrambled, const char *solved,
         const unsigned char *cornertable,
-        const unsigned char *edgetable1)
+        const unsigned char *edgetable1,
+        const unsigned char *edgetable2)
 {
     /*
      * declaring all variables upfront
@@ -67,6 +68,10 @@ int goal_solve(const char *scrambled, const char *solved,
     }
     if (edgetable1) {
         fprintf(stderr, "Edge table 1 loaded, using edge distance heuristic\n");
+        ++numtables;
+    }
+    if (edgetable2) {
+        fprintf(stderr, "Edge table 2 loaded, using edge distance heuristic\n");
         ++numtables;
     }
     fprintf(stderr, "Starting solve method with %d tables\n", numtables);
@@ -173,6 +178,19 @@ int goal_solve(const char *scrambled, const char *solved,
 #ifdef DEBUG_ASSERTS
                     if (heu2 < 0 || heu2 > 10) {
                         fprintf(stderr, "\nWARNING: EDGE HEURISTIC 1 OUT OF BOUNDS\n");
+                        hash = *((int *)0x0);
+                    }
+#endif
+                }
+                if (edgetable2) {
+                    hash = edge_hash2(turns[numturns].cube_data);
+                    heu2 = TABLE_LOOKUP(edgetable2, hash);
+                    if (heu2 > heuristic) {
+                        heuristic = heu2;
+                    }
+#ifdef DEBUG_ASSERTS
+                    if (heu2 < 0 || heu2 > 10) {
+                        fprintf(stderr, "\nWARNING: EDGE HEURISTIC 2 OUT OF BOUNDS\n");
                         hash = *((int *)0x0);
                     }
 #endif
