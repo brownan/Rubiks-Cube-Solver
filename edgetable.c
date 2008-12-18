@@ -326,6 +326,37 @@ int edge_generate1(unsigned char *table, const char *solution)
         }
 
     }
+
+    /*
+     * This sets the value for the solved cube to 0, as it should be.  This
+     * exceptional case, as near as I can tell, comes about because there are
+     * moves which don't change the hash since this table only involves 6 of
+     * the 12 edge cubies.  Therefore, an edge is turned, and while the edge
+     * cubies are still "solved", an entry is inserted in the table as distance
+     * 1, which ruins the admissibility of the heuristic.
+     *
+     * I'm not sure why this wasn't an issue with the corner method actually.
+     * While it doesn't have any moves that don't change the hash, it seems
+     * like it still would have looped back on the solved position at some
+     * point and insert a non-zero value for the solved state.
+     *
+     * My notes from my old program say it's because the corner method's
+     * function to avoid turns that have already been through the stack, but
+     * doesn't this function do that also?
+     *
+     * tl;dr: I don't know why this /isn't/ needed for the corner table, but
+     * this sets the solved distance to 0 since it was overwritten above.
+     */
+    hash = edge_hash1(cube_solved);
+    if (hash & 1) {
+        /* zero out upper bits */
+        table[(hash-1)/2] &= 15;
+    } else {
+        /* zero out lower bits */
+        table[hash/2] &= (15<<4);
+    }
+
+
     free(instack);
     while(stack->length) {
         stack_pop(stack);
