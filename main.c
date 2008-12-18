@@ -18,12 +18,15 @@ int make_corner()
     return 0;
 }
 
-int make_edge()
+int make_edge(int t)
 {
     FILE *output;
     unsigned char *edgetable = CORNER_TABLE_NEW;
-    edge_generate1(edgetable, cube_solved);
-    output = fopen("table_edge1.rht", "w");
+    edge_generate(edgetable, cube_solved, t);
+    if (t==1)
+        output = fopen("table_edge1.rht", "w");
+    else
+        output = fopen("table_edge2.rht", "w");
     edge_write(edgetable, output);
     fclose(output);
     return 0;
@@ -71,8 +74,9 @@ int main(int argc, char **argv)
     printf("1) Solve a cube\n");
     printf("2) Generate the corner table\n");
     printf("3) Generate the first edge table\n");
+    printf("4) Generate the second edge table\n");
     printf("Choose: ");
-    while (scanf("%d", &number) != 1 || number > 3 || number < 1) {
+    while (scanf("%d", &number) != 1 || number > 4 || number < 1) {
         printf("\n");
         printf("Please enter a valid choice.\n");
         printf("Choose: ");
@@ -96,10 +100,16 @@ int main(int argc, char **argv)
             make_corner();
             break;
         case 3:
-            printf("Generating corner cube table\n");
+            printf("Generating edge cube table\n");
             printf("This can take upwards of 20 minutes.  Ctrl-C to cancel\n");
             printf("\n");
-            make_edge();
+            make_edge(1);
+            break;
+        case 4:
+            printf("Generating edge cube table\n");
+            printf("This can take upwards of 20 minutes.  Ctrl-C to cancel\n");
+            printf("\n");
+            make_edge(2);
             break;
     }
 

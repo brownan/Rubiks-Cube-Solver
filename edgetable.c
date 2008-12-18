@@ -203,13 +203,200 @@ int edge_hash1(const char *cubestr)
     return index;
 }
 
+
 /*
- * Similar to corner_generate, this generates the hash table for the first
- * set of edge cubies.
+ * This hashes the edge cubies
+ * 10, 11, 13, 15, 16, and 18
+ */
+int edge_hash2(const char *cubestr)
+{
+    char positions[] = {1, 3, 4, 6, 8, 9, 10, 11, 13, 15, 16, 18};
+    int index = 0;
+    int pos, rot, num, i;
+    
+    const char *cubie;
+
+    /*
+     * First split hash space (42577920) into 24 slices:
+     * 1774080
+     * then into 22 slices:
+     * 80640
+     * and so forth (each cubie eliminates 2 positions):
+     * 4032
+     * 224
+     * 14
+     * 1
+     */
+    
+    /* first */
+    cubie = CUBIE(cubestr, 10);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<11; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 12;
+    /* 
+     * pos is range 0-11
+     * rot is 0 or 12
+     * so pos+rot has range 0-23 as expected
+     */
+    index += (pos+rot) * 1774080;
+#ifdef DEBUG_ASSERTS
+    if (pos>11 || (rot != 0 && rot != 12)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        fprintf(stderr, "Pos: %d, Rot: %d\n", pos, rot);
+        fprintf(stderr, "Cubie[] = [%d, %d]\n", (int)cubie[0], (int)cubie[1]);
+        cube_print(stderr, cubestr);
+        fprintf(stderr, "Positions:\n");
+        for (i=0; i<12; ++i)
+            fprintf(stderr, "%d ", positions[i]);
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    /* second */
+    cubie = CUBIE(cubestr, 11);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<10; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 11;
+    /* 
+     * pos is range 0-10
+     * rot is 0 or 11
+     * so pos+rot has range 0-21
+     */
+    index += (pos+rot) * 80640;
+#ifdef DEBUG_ASSERTS
+    if (pos>10 || (rot != 0 && rot != 11)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    /* third */
+    cubie = CUBIE(cubestr, 13);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<9; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 10;
+    /* 
+     * pos is range 0-9
+     * rot is 0 or 10
+     * so pos+rot has range 0-19
+     */
+    index += (pos+rot) * 4032;
+#ifdef DEBUG_ASSERTS
+    if (pos>9 || (rot != 0 && rot != 10)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    /* fourth */
+    cubie = CUBIE(cubestr, 15);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<8; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 9;
+    /* 
+     * pos is range 0-8
+     * rot is 0 or 9
+     * so pos+rot has range 0-17
+     */
+    index += (pos+rot) * 224;
+#ifdef DEBUG_ASSERTS
+    if (pos>8 || (rot != 0 && rot != 9)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    /* fifth */
+    cubie = CUBIE(cubestr, 16);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<7; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 8;
+    /* 
+     * pos is range 0-7
+     * rot is 0 or 8
+     * so pos+rot has range 0-15
+     */
+    index += (pos+rot) * 14;
+#ifdef DEBUG_ASSERTS
+    if (pos>7 || (rot != 0 && rot != 8)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    /* sixth */
+    cubie = CUBIE(cubestr, 18);
+    num = cubie[0]; /* position id on the cube */
+    /* find its index in the positions array */
+    pos = 0;
+    while (num != positions[pos])
+        ++pos;
+    /* remove that pos from the array */
+    for (i=pos; i<6; ++i)
+        positions[i] = positions[i+1];
+    rot = cubie[1] * 7;
+    /* 
+     * pos is range 0-6
+     * rot is 0 or 7
+     * so pos+rot has range 0-13
+     */
+    index += (pos+rot);
+#ifdef DEBUG_ASSERTS
+    if (pos>6 || (rot != 0 && rot != 7)) {
+        fprintf(stderr, "\nWARNING: BAD POS/ROT\n");
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+#ifdef DEBUG_ASSERTS
+    if (index >= 42577920) {
+        fprintf(stderr, "\nWARNING: HASH RETURNED %d\n", index);
+        index = *((int *)0x0); /* sigsev */
+    }
+#endif
+
+    return index;
+}
+
+
+/*
+ * Similar to corner_generate, this generates the hash table for the edge
+ * cubies.  There are two edge cubie tables to choose from.  The tablenum
+ * variable should specify which table is being generated.  Either 1 or 2.
  *
  * Mostly copied from corner_generate
  */
-int edge_generate1(unsigned char *table, const char *solution)
+int edge_generate(unsigned char *table, const char *solution, int tablenum)
 {
     stacktype *stack;
     /*
@@ -226,6 +413,19 @@ int edge_generate1(unsigned char *table, const char *solution)
     int depth;
     cube_type turned;
 
+    /* Which edge hashing function to use */
+    int (*hashfunc)(const char *);
+
+    switch (tablenum) {
+        case 1:
+            hashfunc = edge_hash1;
+            break;
+        case 2:
+            hashfunc = edge_hash2;
+            break;
+        default:
+            return 0;
+    }
 
     /* Create a stack */
     stack = STACK_NEW;
@@ -274,7 +474,7 @@ int edge_generate1(unsigned char *table, const char *solution)
          * if item is at our current target depth, add it to hash table
          */
         if (current.distance == depth) {
-            hash = edge_hash1(current.cube_data);
+            hash = hashfunc(current.cube_data);
             if (hash & 1) {
                 if (!(table[(hash-1)/2] >> 4)) {
                     table[(hash-1)/2] |= current.distance << 4;
@@ -305,7 +505,7 @@ int edge_generate1(unsigned char *table, const char *solution)
                  * Check if turned is in instack and is greater than
                  * or equal to the depth.  If so, skip
                  */
-                hash = edge_hash1(turned);
+                hash = hashfunc(turned);
                 if (hash&1 ? \
                         ((instack[(hash-1)/2] >> 4) <= (current.distance+1)) : \
                         ((instack[hash/2] & 15) <= (current.distance+1))) {
@@ -347,7 +547,7 @@ int edge_generate1(unsigned char *table, const char *solution)
      * tl;dr: I don't know why this /isn't/ needed for the corner table, but
      * this sets the solved distance to 0 since it was overwritten above.
      */
-    hash = edge_hash1(cube_solved);
+    hash = hashfunc(cube_solved);
     if (hash & 1) {
         /* zero out upper bits */
         table[(hash-1)/2] &= 15;

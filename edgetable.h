@@ -15,7 +15,7 @@ int edge_hash1(const char *cubestr);
 #define EDGE_TABLE_NEW calloc(21288960, 1)
 #define EDGE_TABLE_CLEAR(table) memset(table, 255, 21288960)
 
-int edge_generate1(unsigned char *edgetable, const char *solution);
+int edge_generate(unsigned char *edgetable, const char *solution, int tablenum);
 
 /*
  * Dumps the table out to the given file object, open for writing
