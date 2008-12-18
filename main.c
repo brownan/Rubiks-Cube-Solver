@@ -38,14 +38,20 @@ int solve(char *tosolve)
 
     corner_table = CORNER_TABLE_NEW;
     input = fopen("table_corner.rht", "r");
-    if (!corner_read(corner_table, input))
-        return 0;
+    if (!corner_read(corner_table, input)) {
+        printf("Warning: could not open corner table\n");
+        free(corner_table);
+        corner_table = NULL;
+    }
     fclose(input);
 
     edge_table = EDGE_TABLE_NEW;
     input = fopen("table_edge1.rht", "r");
-    if (!edge_read(edge_table, input))
-        return 0;
+    if (!edge_read(edge_table, input)) {
+        printf("Warning: could not open edge table\n");
+        free(edge_table);
+        edge_table = NULL;
+    }
     fclose(input);
 
     cube_120convert(tosolve, tosolve_converted);
@@ -57,10 +63,37 @@ int solve(char *tosolve)
 
 int main(int argc, char **argv)
 {
-    solve(argv[1]);
-    /*
-    make_corner();
-    make_edge();
-    */
+    int number;
+    char cube_raw[121];
+    printf("What would you like to do?\n");
+    printf("1) Solve a cube\n");
+    printf("2) Generate the corner table\n");
+    printf("3) Generate the first edge table\n");
+    printf("Choose: ");
+    while (scanf("%d", &number) != 1 && (number > 3 || number < 1)) {
+        printf("Please enter a valid choice.\n");
+        printf("Choose: ");
+    }
+    switch (number) {
+        case 1:
+            printf("\nPlease enter a raw cube string.\n" \
+                    "Raw cube strings are 120 characters long and designate\n"\
+                    "the colors on each side of all 20 cubies.\n"\
+                    "You can generate this with the cube_convert.py script\n");
+            scanf("%120s", cube_raw);
+            solve(cube_raw);
+            break;
+        case 2:
+            printf("Generating corner cube table\n");
+            printf("This can take upwards of 40 minutes.  Ctrl-C to cancel\n");
+            make_corner();
+            break;
+        case 3:
+            printf("Generating corner cube table\n");
+            printf("This can take upwards of 20 minutes.  Ctrl-C to cancel\n");
+            make_edge();
+            break;
+    }
+
     return 0;
 }
