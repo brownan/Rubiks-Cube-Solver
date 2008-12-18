@@ -261,7 +261,7 @@ int edge_generate1(unsigned char *table, const char *solution)
 
         /* Print out status every 2^18 pops  (approx every 200k)*/
         if ((popcount & 0777777) == 0777777) {
-            fprintf(stderr, "\r%d/42577920 hashed, on level:%d/10, total traversed:%d %d%% ", count, depth, popcount, popcount/275251199);
+            fprintf(stderr, "\r%d/42577920 hashed, on level:%d/10, total traversed:%d %d%% ", count, depth, popcount, popcount/2752511);
         }
 #ifdef PROFILE_MODE
         /* For profiling, so I don't have to wait an hour to gather data */
