@@ -55,8 +55,6 @@ int solve(char *tosolve)
     fclose(input);
 
     cube_120convert(tosolve, tosolve_converted);
-    printf("Converted cube:\n");
-    cube_print(stdout,tosolve_converted);
     goal_solve(tosolve_converted, cube_solved, corner_table, edge_table); 
     return 1;
 }
@@ -81,16 +79,19 @@ int main(int argc, char **argv)
                     "the colors on each side of all 20 cubies.\n"\
                     "You can generate this with the cube_convert.py script\n");
             scanf("%120s", cube_raw);
+            printf("\n");
             solve(cube_raw);
             break;
         case 2:
             printf("Generating corner cube table\n");
             printf("This can take upwards of 40 minutes.  Ctrl-C to cancel\n");
+            printf("\n");
             make_corner();
             break;
         case 3:
             printf("Generating corner cube table\n");
             printf("This can take upwards of 20 minutes.  Ctrl-C to cancel\n");
+            printf("\n");
             make_edge();
             break;
     }

@@ -47,6 +47,7 @@ int goal_solve(const char *scrambled, const char *solved,
 
     int f;
 
+    int numtables = 0;
 
     /*
      * primitive stack to hold the solution
@@ -59,6 +60,20 @@ int goal_solve(const char *scrambled, const char *solved,
      * The stack
      */
     stack = STACK_NEW;
+
+    if (cornertable) {
+        fprintf(stderr, "Corner table loaded, using corner distance heuristic\n");
+        ++numtables;
+    }
+    if (edgetable1) {
+        fprintf(stderr, "Edge table 1 loaded, using edge distance heuristic\n");
+        ++numtables;
+    }
+    fprintf(stderr, "Starting solve method with %d tables\n", numtables);
+    if (!numtables){ 
+        fprintf(stderr, "WARNING: No tables loaded.  This could take a while\n");
+    }
+
 
     /*
      * thinking out loud: this is practically an inf. loop, searching up to 25
@@ -131,14 +146,16 @@ int goal_solve(const char *scrambled, const char *solved,
                  */
                 heuristic = 0;
 
-                hash = corner_hash(turns[numturns].cube_data);
-                heuristic = TABLE_LOOKUP(cornertable, hash);
+                if (cornertable) {
+                    hash = corner_hash(turns[numturns].cube_data);
+                    heuristic = TABLE_LOOKUP(cornertable, hash);
 #ifdef DEBUG_ASSERTS
-                if (heuristic < 0 || heuristic > 11) {
-                    fprintf(stderr, "\nWARNING: CORNER HERUISTIC OUT OF BOUNDS\n");
-                    hash = *((int *)0x0);
-                }
+                    if (heuristic < 0 || heuristic > 11) {
+                        fprintf(stderr, "\nWARNING: CORNER HERUISTIC OUT OF BOUNDS\n");
+                        hash = *((int *)0x0);
+                    }
 #endif
+                }
 
                 /*
                  * Here, we would put the next heuristic value into
@@ -147,19 +164,19 @@ int goal_solve(const char *scrambled, const char *solved,
                  *
                  * repeat as necessary
                  */
-                
-                hash = edge_hash1(turns[numturns].cube_data);
-                heu2 = TABLE_LOOKUP(edgetable1, hash);
-                if (heu2 > heuristic) {
-                    heuristic = heu2;
-                }
+                if (edgetable1) {
+                    hash = edge_hash1(turns[numturns].cube_data);
+                    heu2 = TABLE_LOOKUP(edgetable1, hash);
+                    if (heu2 > heuristic) {
+                        heuristic = heu2;
+                    }
 #ifdef DEBUG_ASSERTS
-                if (heu2 < 0 || heu2 > 10) {
-                    fprintf(stderr, "\nWARNING: EDGE HEURISTIC 1 OUT OF BOUNDS\n");
-                    hash = *((int *)0x0);
-                }
+                    if (heu2 < 0 || heu2 > 10) {
+                        fprintf(stderr, "\nWARNING: EDGE HEURISTIC 1 OUT OF BOUNDS\n");
+                        hash = *((int *)0x0);
+                    }
 #endif
-                
+                }
 
                 /* The turned node has distance-plus-cost value
                  * f(x) = g(x) + h(x)
