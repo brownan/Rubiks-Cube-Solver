@@ -63,15 +63,22 @@ int main(int argc, char **argv)
 {
     int number;
     char cube_raw[121];
+    if (argc == 2) {
+        solve(argv[1]);
+        exit(0);
+    }
     printf("What would you like to do?\n");
     printf("1) Solve a cube\n");
     printf("2) Generate the corner table\n");
     printf("3) Generate the first edge table\n");
     printf("Choose: ");
-    while (scanf("%d", &number) != 1 && (number > 3 || number < 1)) {
+    while (scanf("%d", &number) != 1 || number > 3 || number < 1) {
+        printf("\n");
         printf("Please enter a valid choice.\n");
         printf("Choose: ");
+        number = getchar();
     }
+    printf("\n");
     switch (number) {
         case 1:
             printf("\nPlease enter a raw cube string.\n" \
