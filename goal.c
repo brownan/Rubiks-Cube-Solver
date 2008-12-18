@@ -41,8 +41,9 @@ int goal_solve(const char *scrambled, const char *solved,
     qdata *tempqdata;
     
     /* Used to store the heuristic of the current turn */
-    int heuristic, heu2;
+    int heuristic;
     int hash;
+    int heu2;
 
     int f;
 
@@ -130,10 +131,8 @@ int goal_solve(const char *scrambled, const char *solved,
                  */
                 heuristic = 0;
 
-                /*
                 hash = corner_hash(turns[numturns].cube_data);
                 heuristic = TABLE_LOOKUP(cornertable, hash);
-                */
 #ifdef DEBUG_ASSERTS
                 if (heuristic < 0 || heuristic > 11) {
                     fprintf(stderr, "\nWARNING: CORNER HERUISTIC OUT OF BOUNDS\n");
@@ -149,12 +148,11 @@ int goal_solve(const char *scrambled, const char *solved,
                  * repeat as necessary
                  */
                 
-                /*
                 hash = edge_hash1(turns[numturns].cube_data);
                 heu2 = TABLE_LOOKUP(edgetable1, hash);
-                if (heu2 > heuristic)
+                if (heu2 > heuristic) {
                     heuristic = heu2;
-                    */
+                }
 #ifdef DEBUG_ASSERTS
                 if (heu2 < 0 || heu2 > 10) {
                     fprintf(stderr, "\nWARNING: EDGE HEURISTIC 1 OUT OF BOUNDS\n");

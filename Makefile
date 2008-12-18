@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -pedantic -O3
+CFLAGS=-Wall -pedantic -Werror -O3
 # Pick and choose debugging compiler flags:
 # -g  debugging
 # -fprofile-arcs -ftest-coverage -pg  profiling
