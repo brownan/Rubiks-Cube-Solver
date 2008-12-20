@@ -203,7 +203,9 @@ int goal_solve(const char *scrambled, const char *solved,
                  *      node, and turned is current's successor)
                  * h(x) = heuristic   is the estimated path cost from this node
                  *                    to the goal
-                 * h(x) NEVER UNDERESTIMATES THE GOAL! THIS IS KEY.
+                 * h(x) NEVER OVERESTIMATES THE GOAL! THIS IS KEY.
+                 *      (h(x) will always be less than or equal to the
+                 *      actual distance to the goal)
                  *      Since we KNOW that from here the goal is
                  *      AT LEAST h(x) moves away, we maybe can throw
                  *      this turn away depending on our current search
