@@ -529,23 +529,17 @@ int edge_generate(unsigned char *table, const char *solution, int tablenum)
 
     /*
      * This sets the value for the solved cube to 0, as it should be.  This
-     * exceptional case, as near as I can tell, comes about because there are
-     * moves which don't change the hash since this table only involves 6 of
-     * the 12 edge cubies.  Therefore, an edge is turned, and while the edge
-     * cubies are still "solved", an entry is inserted in the table as distance
-     * 1, which ruins the admissibility of the heuristic.
+     * exceptional case comes about because there are moves which don't change
+     * the hash (this table only involves 6 of the 12 edge cubies.)  Therefore,
+     * an edge is turned, and while the edge cubies are still "solved", an
+     * entry is inserted in the table with distance 1, which ruins the
+     * admissibility of the heuristic.
      *
-     * I'm not sure why this wasn't an issue with the corner method actually.
-     * While it doesn't have any moves that don't change the hash, it seems
-     * like it still would have looped back on the solved position at some
-     * point and insert a non-zero value for the solved state.
-     *
-     * My notes from my old program say it's because the corner method's
-     * function to avoid turns that have already been through the stack, but
-     * doesn't this function do that also?
-     *
-     * tl;dr: I don't know why this /isn't/ needed for the corner table, but
-     * this sets the solved distance to 0 since it was overwritten above.
+     * This wasn't an issue with the corner table because every turn from the
+     * solved state brought it to an unsolved state (unlike this table).  So
+     * the 18 cubes that are 1 position away from solved go into the 'instack'
+     * table, which prevents the search from coming back to the solved state.
+     * The 18 moves around the solved state form a kind of barrier.
      */
     hash = hashfunc(cube_solved);
     if (hash & 1) {

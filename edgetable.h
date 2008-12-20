@@ -7,6 +7,7 @@
  */
 
 int edge_hash1(const char *cubestr);
+int edge_hash2(const char *cubestr);
 
 /*
  * Use these macros to calloc a new edge table and to clear
