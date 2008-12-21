@@ -4,13 +4,6 @@
 #include "cube.h"
 
 
-/*
- * This is a custom stack data structure that is meant to take as one structure the
- * following information:
- * a cube type (120 length string)
- * an integer indicating what turn formed this cube
- * an integer indicating the distance from the start
- */
 
 /*
  * This struct is what data goes in each slot in the stack
@@ -34,8 +27,6 @@ typedef struct BLOCK {
 
 /*
  * This structure holds stack specific information.
- * malloc enough space for this, as a minimum set rightblock to null, and pass
- * a reference to this to all stack methods
  */
 typedef struct {
     block *rightblock;
@@ -48,22 +39,8 @@ typedef struct {
  */
 #define STACK_NEW calloc(sizeof(stacktype), 1)
 
-/*
- * This pushes a cube to the stack,
- * pass in a ptr to the cube str, the turn used to produce this cube, and the
- * distance.  It will be pushed onto the stack
- */
 int stack_push(stacktype *stack, const char *cube_to_append, int turn, int distance);
 
-/*
- * This stack works a bit differently.  There are operations to individually
- * peek at the different items at the top of the stack, but the stack remains
- * unchanged.  Then the pop operation doesn't return anything, but just
- * destroys the topmost element.  This is done so that I don't deal with
- * references and all that, most all data transfer is done right on the stack.
- *
- * These could even be macros (look into this XXX)
- */
 int stack_peek_cube(stacktype *stack, cube_type *targetcube);
 int stack_peek_turn(stacktype *stack);
 int stack_peek_distance(stacktype *stack);

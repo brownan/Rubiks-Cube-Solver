@@ -1,15 +1,5 @@
 #ifndef GOAL_H
 #define GOAL_H
-/*
- * goal.c contains routines for actually solving the cube.  Actually only one,
- * the function below takes:
- * 1) the scrambled cube type
- * 2) the solved cube type
- * 3) a pointer to the corner heurisitcs table
- * To come: parameters for pointers to more heuristics tables!  Excitement!
- *
- * The solution is printed to standard out
- */
 int goal_solve(const char *scrambled, const char *solved,
         const unsigned char *cornertable,
         const unsigned char *edgetable1,

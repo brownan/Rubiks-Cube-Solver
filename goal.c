@@ -10,9 +10,14 @@
 #include "common.h"
 
 /*
- * as always, see the header file for more comments
+ * goal.c contains routines for actually solving the cube.  Actually only one,
+ * the function below takes:
+ * 1) the scrambled cube type
+ * 2) the solved cube type
+ * 3) a pointer to the corner heurisitcs tables
+ *
+ * The solution is printed to standard out when found
  */
-
 int goal_solve(const char *scrambled, const char *solved,
         const unsigned char *cornertable,
         const unsigned char *edgetable1,

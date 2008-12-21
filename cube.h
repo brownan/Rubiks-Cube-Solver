@@ -50,9 +50,6 @@
 #define CUBELEN 40
 typedef char cube_type[CUBELEN];
 
-/*
- * Default "solved" cube definition
- */
 extern const char cube_solved[];
 
 /*
@@ -71,16 +68,8 @@ extern const char cube_solved[];
 #define DOWN 4
 #define RIGHT 5
 
-/*
- * This method takes a pointer to the traditional 120 byte cube string, and a
- * pointer to a cube_type where the new cube type will be put.
- */
 int cube_120convert(const char *input, char *output);
 
-/*
- * Comments moved to cube.c.  Somewhere along the way I decided comments
- * were more apt to be next to the definition, not declaration
- */
 char *cube_turn(char *to_twist, int direction);
 
 /*
@@ -91,12 +80,12 @@ char *cube_turn(char *to_twist, int direction);
  * performed right after.
  *
  * The table works like this: 
- * cubeavoid is an array, the Mth bit of the Nth item indicates that turn M
- * should not be performed after turning the cube in the N direction.
+ * cube_turn_avoid is an array, the Mth bit of the Nth item indicates that turn
+ * M should not be performed after turning the cube in the N direction.
  * 
  * So to determine if you should turn a direction i after having turned a
  * direction t, do:
- * if (cubeavoid[t] & (1L << i)) {...}
+ * if (cube_turn_avoid[t] & (1L << i)) {...}
  * in fact, I think I'll make that a macro:
  */
 #define SHOULDIAVOID(i, t) (cube_turn_avoid[t] & (1L<<i))
@@ -112,11 +101,6 @@ char *cube_turn(char *to_twist, int direction);
  */
 extern const long cube_turn_avoid[];
 
-/*
- * I thought it'd be good to have a print method, since most debuggers try to
- * interpret the characters literally Pass in the cube type, and the output
- * stream
- */
 int cube_print(FILE *output, const char *cube);
 
 #endif

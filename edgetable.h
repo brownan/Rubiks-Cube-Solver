@@ -1,10 +1,6 @@
 #ifndef EDGETABLE_H
 #define EDGETABLE_H
 
-/*
- * New in this header, no comments!
- * Find relevant comments by the definitions now
- */
 
 int edge_hash1(const char *cubestr);
 int edge_hash2(const char *cubestr);

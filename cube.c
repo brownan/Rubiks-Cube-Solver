@@ -4,6 +4,14 @@
 #include "cube.h"
 #include "common.h"
 
+/*
+ * See helpful description of the cube representation and description of other
+ * conventions I use in cube.h
+ */
+
+/*
+ * Default "solved" cube definition
+ */
 const cube_type cube_solved =  "\x00\x00" "\x01\x00" "\x02\x00" "\x03\x00" \
                                "\x04\x00" "\x05\x00" "\x06\x00" "\x07\x00" \
                                "\x08\x00" "\x09\x00" "\x0A\x00" "\x0B\x00" \
@@ -14,6 +22,7 @@ const cube_type cube_solved =  "\x00\x00" "\x01\x00" "\x02\x00" "\x03\x00" \
  * Avoids: Turning the same face in any direction that was just turned.
  * Also: for turns on the back, right, or bottom, avoids turns on the opposite
  * face.
+ * See more detailed explanation in cube.h, along with the macro to use it
  */
 const long cube_turn_avoid[] = {
                              /* |17<----------->0| */
@@ -107,6 +116,10 @@ static char turn_this_cubie[20][6] = {
  */
 static char corner_cubies[] = {1,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,0,1};
 
+/*
+ * This method takes a pointer to the traditional 120 byte cube string, and a
+ * pointer to a cube_type where the new cube type will be put.
+ */
 int cube_120convert(const char *input, char *output)
 {
     int i;
@@ -227,6 +240,12 @@ char *cube_turn(char *to_twist, int turn)
     return to_twist;
 }
     
+/*
+ * I thought it'd be good to have a print method, since most debuggers try to
+ * interpret the characters literally which makes it hard to read. Pass in the
+ * cube type, and the output stream, and this prints out the cube with hex
+ * digits for each byte
+ */
 int cube_print(FILE *output, const char *cube)
 {
     int i;
