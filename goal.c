@@ -123,9 +123,7 @@ int goal_solve(const char *scrambled, const char *solved,
                  * DINGDINGDINGDING We've found a solution
                  */
                 printf("Solution found!\n");
-                i=0;
-                while (path[i] != -1)
-                    printf("%d  ", path[i++]);
+                cube_print_solution(path);
 
                 printf("\n");
                 goto solve_cleanup;
@@ -285,4 +283,56 @@ solve_cleanup:
     /* XXX MAKE SURE STACK IS EMPTY (could still leak memory) */
     free(stack);
     return 1;
+}
+
+/*
+ * This function takes a pointer to the path array, and prints to stdout a nice
+ * formatted sequence of turns, with letters and all
+ */
+void cube_print_solution(const int *path)
+{
+    const int *t = path;
+    char face = '\0';
+    while (*t != -1) {
+        switch (*t) {
+            case 0:
+            case 6:
+            case 12:
+                face = 'F';
+                break;
+            case 1:
+            case 7:
+            case 13:
+                face = 'T';
+                break;
+            case 2:
+            case 8:
+            case 14:
+                face = 'L';
+                break;
+            case 3:
+            case 9:
+            case 15:
+                face = 'B';
+                break;
+            case 4:
+            case 10:
+            case 16:
+                face = 'D';
+                break;
+            case 5:
+            case 11:
+            case 17:
+                face = 'R';
+                break;
+        }
+        if (*t >= 12) {
+            fprintf(stdout, "2%c ", face);
+        } else if (*t >= 6) {
+            fprintf(stdout, "%c' ", face);
+        } else {
+            fprintf(stdout, "%c ", face);
+        }
+        ++t;
+    }
 }
