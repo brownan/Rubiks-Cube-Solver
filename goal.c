@@ -55,6 +55,8 @@ int goal_solve(const char *scrambled, const char *solved,
 
     int numtables = 0;
 
+    int solution_found = 0;
+
     /*
      * primitive stack to hold the solution
      */
@@ -94,6 +96,8 @@ int goal_solve(const char *scrambled, const char *solved,
     {
         if (stack->length == 0)
         {
+            if (solution_found)
+                goto solve_cleanup;
             stack_push(stack, scrambled, -1, 0);
             depth++;
             fprintf(stderr, "Searching depth %d, Nodes expanded: %ld,"
@@ -122,11 +126,14 @@ int goal_solve(const char *scrambled, const char *solved,
                 /*
                  * DINGDINGDINGDING We've found a solution
                  */
-                printf("Solution found!\n");
+                if (!solution_found) {
+                    printf("Solution found!\n");
+                    printf("Continuing to look for more solutions at this depth\n");
+                    solution_found = 1;
+                }
                 cube_print_solution(path);
-
                 printf("\n");
-                goto solve_cleanup;
+
             }
         } else {
             /*
