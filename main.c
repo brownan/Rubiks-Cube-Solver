@@ -39,6 +39,8 @@ int solve(char *tosolve)
     unsigned char *corner_table, *edge_table, *edge_table2;
     cube_type tosolve_converted;
 
+    fprintf(stderr, "Loading tables...\n");
+
     corner_table = CORNER_TABLE_NEW;
     input = fopen("table_corner.rht", "r");
     if (!corner_read(corner_table, input)) {

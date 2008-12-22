@@ -4,9 +4,24 @@
 #include "cube.h"
 
 /*
- * See more comments in common.h
+ * common.c has methods used by more than one function
  */
 
+/*
+ * Whichpos takes a 6 character string from the old 120 byte cube
+ * representation and determines which of the twenty cubies it is by looking at
+ * the signature of 'n's it has
+ *
+ * This method is costly, the huge number of tiny branches probably kill the
+ * processor pipeline.  
+ *
+ * This method used to be used in the main loop, called from the hashing
+ * functions, but has since been obsoleted by adding a position byte to each
+ * cubie in the cube representation string.
+ * This method is still useful to convert the old 120 byte strings to the newer
+ * format.
+ *
+ */
 int whichpos(const char *cubie)
 {
     /* Takes a 6 character cubie string and returns which cubie it is,
@@ -67,7 +82,12 @@ int whichpos(const char *cubie)
     return -1;
 }
 
-/* This is also expensive, should not be called in main loop */
+/*
+ * Whichrot takes a 6 character string and determines what its rotation is.
+ * See cube.h for information on how cubie rotations are defined
+ *
+ * This is also expensive, should not be called in main loop
+ */
 int whichrot(const char *cubie)
 {
     char cols[2]; /* used for edge cubies */
@@ -125,8 +145,7 @@ int whichrot(const char *cubie)
          * back, or if the other color is on the top or bottom.  Then it's
          * 0.
          *
-         * Therefore, thanks to the re-ordering done above, it's the same
-         * check:
+         * Thanks to the re-ordering done above, it's the same check:
          */
         if (cubie[TOP] == cols[1] || cubie[DOWN] == cols[1] ||
                 cubie[FRONT] == cols[0] || cubie[BACK] == cols[0]) {
