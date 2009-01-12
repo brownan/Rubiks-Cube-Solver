@@ -70,7 +70,7 @@ extern const char cube_solved[];
 
 /*
  * This macro is used to return a pointer into a cube type for the given cubie
- * (sub-cube). Does not include the cubie id byte
+ * (sub-cube).
  */
 #define CUBIE(cube, n) ((char *)cube + (n << 1))
 
