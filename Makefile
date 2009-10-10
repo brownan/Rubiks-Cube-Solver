@@ -10,7 +10,7 @@ SRCS=cube.c stack.c common.c cornertable.c main.c goal.c edgetable.c
 HEADS=cube.h stack.h common.h cornertable.h goal.h edgetable.h
 OBJS=cube.o stack.o common.o cornertable.o goal.o edgetable.o
 
-all: main tags
+all: solver tags
 
 cleanall: clean all
 
@@ -18,12 +18,12 @@ cleanall: clean all
 # also, remake if the makefile itself changes
 $(OBJS): $(HEADS) Makefile
 
-# main depends on all objects, and its own source
-main: $(OBJS) main.c
-	gcc $(CFLAGS) $(OBJS) main.c -o main
+# solver depends on all objects, and its own source
+solver: $(OBJS) main.c
+	gcc $(CFLAGS) $(OBJS) main.c -o solver
 
 tags: $(SRCS) $(HEADS)
 	-ctags -R .
 
 clean:
-	-rm -f *.o main *.gcno *.gcov *.gcda gmon.out
+	-rm -f *.o solver *.gcno *.gcov *.gcda gmon.out
