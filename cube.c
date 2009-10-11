@@ -133,6 +133,21 @@ static char turn_this_cubie[20][6] = {
 static char corner_cubies[] = {1,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,0,1,0,1};
 
 /*
+ * Table that maps a cube face and a corner cubie rotation
+ * to a new rotation. This should be consulted for a corner cubie
+ * that is on a face being rotated a quarter turn to find its new
+ * rotation
+ */
+static char corner_rotation[6][3] = {
+    /* FRONT */ {0, 2, 1},
+    /* TOP   */ {1, 0, 2},
+    /* LEFT  */ {2, 1, 0},
+    /* BACK  */ {0, 2, 1},
+    /* DOWN  */ {1, 0, 2},
+    /* RIGHT */ {2, 1, 0},
+};
+
+/*
  * This method takes a pointer to the traditional 120 byte cube string, and a
  * pointer to a cube_type where the new cube type will be put.
  */
@@ -165,22 +180,25 @@ int cube_120convert(const char *input, char *output)
  */
 char *cube_turn(char *to_twist, int turn)
 {
-    int rotamt;
     int i, c;
     int face;
     char *cubie;
 
     if (turn >= 12) {
         /* half turn */
-        rotamt = 0; /* half turns don't change rotations */
-        face = turn - 12;
+        // half turns don't change rotation, so do a tight loop
+        // just changing positions
+        for (i=0; i<20; i++) {
+            cubie = CUBIE(to_twist,i);
+            cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
+        }
+        return to_twist;
+
     } else if (turn >= 6) {
         /* CC-wise turn */
-        rotamt = 1;
         face = turn - 6;
     } else {
         /* C-wise turn */
-        rotamt = 1;
         face = turn;
     }
     for (i=0,c=0; i<20 && c<8; ++i) {
@@ -189,63 +207,14 @@ char *cube_turn(char *to_twist, int turn)
         if (turn_this_cubie[(int)cubie[0]][face]) {
             /* Yes, we're turning this one */
             ++c;
-            if (rotamt == 0) {
-                /* just update pos, no rotation */
-                cubie[0] = turn_position_lookup[(int)cubie[0]][turn];
-                continue;
-            } else if (corner_cubies[i]) {
+            if (corner_cubies[i]) {
                 /* And it's a corner cubie */
                 /* update rotation */
-                switch (face) {
-                    case FRONT:
-                    case BACK:
-                        /* 
-                         * If rot is 0, no change 
-                         * else, toggle between 1 and 2
-                         */
-                        switch (cubie[1]) {
-                            case 1:
-                                cubie[1] = 2;
-                                break;
-                            case 2:
-                                cubie[1] = 1;
-                        }
-                        break;
-                    case TOP:
-                    case DOWN:
-                        /*
-                         * if rot is 2, no change,
-                         * else toggle between 0 and 1
-                         */
-                        switch (cubie[1]) {
-                            case 0:
-                                cubie[1] = 1;
-                                break;
-                            case 1:
-                                cubie[1] = 0;
-                        }
-                        break;
-                    case LEFT:
-                    case RIGHT:
-                        /*
-                         * if rot is 1, no change,
-                         * else toggle between 0 and 2
-                         */
-                        switch (cubie[1]) {
-                            case 0:
-                                cubie[1] = 2;
-                                break;
-                            case 2:
-                                cubie[1] = 0;
-                        }
-                        break;
-                }
+                cubie[1] = corner_rotation[face][(int)cubie[1]];
             } else {
                 /* it's an edge cubie */
-                switch (face) {
-                    case LEFT:
-                    case RIGHT:
-                        cubie[1] = (!cubie[1]);
+                if (face == LEFT || face == RIGHT) {
+                    cubie[1] = (!cubie[1]);
                 }
             }
             /* now update position */

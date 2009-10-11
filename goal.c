@@ -25,6 +25,30 @@
 #include "edgetable.h"
 #include "common.h"
 
+/**
+ * Sorts the given array of qdatas by the given array of heruristics
+ * called from the final steps in goal_solve
+ */
+static void sort_turns(qdata **turns_sorted, int *heuristics, int numturns)
+{
+    qdata *tempqdata;
+    int j;
+    int i;
+    int heuristic;
+    for (i=1; i<numturns; i++) {
+        tempqdata = turns_sorted[i];
+        heuristic = heuristics[i];
+        j = i - 1;
+        while (j >= 0 && heuristics[j] < heuristic) {
+            turns_sorted[j+1] = turns_sorted[j];
+            heuristics[j+1] = heuristics[j];
+            --j;
+        }
+        turns_sorted[j+1] = tempqdata;
+        heuristics[j+1] = heuristic;
+    }
+
+}
 /*
  * goal.c contains routines for actually solving the cube.  Actually only one,
  * the function below takes:
@@ -46,7 +70,7 @@ int goal_solve(const char *scrambled, const char *solved,
     long popcount = 0; /* nodes traversed */
     
     qdata current;
-    int i, j;
+    int i;
     stacktype *stack;
     int depth = -1;
 
@@ -59,8 +83,6 @@ int goal_solve(const char *scrambled, const char *solved,
     int heuristics[18]; /* heuristics values of the corresponding elements */
     /* If the turn isn't eliminated by any heuristic, this is incremented */
     int numturns;
-    /* for swapping */
-    qdata *tempqdata;
     
     /* Used to store the heuristic of the current turn */
     int heuristic;
@@ -271,23 +293,11 @@ int goal_solve(const char *scrambled, const char *solved,
              * 1. Sort the turns_sorted and heuristics array descending by the
              * heuristic, and then
              * 2. add them in order to the stack.
-             *
-             * XXX MAKE SURE THIS IS SORTING IN THE CORRECT ORDER!
              */
 
             /* Step 1 */
-            for (i=1; i<numturns; i++) {
-                tempqdata = turns_sorted[i];
-                heuristic = heuristics[i]; /* repurposed: temp var */
-                j = i - 1;
-                while (j >= 0 && heuristics[j] < heuristic) {
-                    turns_sorted[j+1] = turns_sorted[j];
-                    heuristics[j+1] = heuristics[j];
-                    --j;
-                }
-                turns_sorted[j+1] = tempqdata;
-                heuristics[j+1] = heuristic;
-            }
+            /* for swapping */
+            sort_turns(turns_sorted, heuristics, numturns);
 
             /* step 2: add to stack */
             for (i=0; i<numturns; ++i) {
@@ -306,6 +316,7 @@ solve_cleanup:
     free(stack);
     return 1;
 }
+
 
 /*
  * This function takes a pointer to the path array, and prints to stdout a nice

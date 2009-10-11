@@ -94,10 +94,13 @@ int main(int argc, char **argv)
 {
     int number;
     char cube_raw[121];
+    // Was the cube string specified on the command line? If not, present a
+    // menu
     if (argc == 2) {
         solve(argv[1]);
         exit(0);
     }
+menu_top:
     printf("What would you like to do?\n");
     printf("1) Solve a cube\n");
     printf("2) Generate the corner table\n");
@@ -117,7 +120,11 @@ int main(int argc, char **argv)
                     "Raw cube strings are 120 characters long and designate\n"\
                     "the colors on each side of all 20 cubies.\n"\
                     "You can generate this with the cube_convert.py script\n");
-            scanf("%120s", cube_raw);
+            int result = scanf("%120s", cube_raw);
+            if (result < 1) {
+                printf("Cube string error");
+                goto menu_top;
+            }
             printf("\n");
             solve(cube_raw);
             break;
