@@ -1,5 +1,9 @@
 CC=gcc
 CFLAGS=-Wall -Werror -O3
+# These may help a bit:
+#CFLAGS+=-fno-stack-protector
+#CFLAGS+=-ftree-parallelize-loops=3
+
 # Pick and choose debugging compiler flags:
 # -g  debugging
 # -fprofile-arcs -ftest-coverage -pg  profiling
