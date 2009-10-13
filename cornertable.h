@@ -27,7 +27,7 @@
 #define CORNER_TABLE_NEW calloc(44089920, 1)
 #define CORNER_TABLE_CLEAR(table) memset(table, 255, 44089920)
 
-int corner_hash(const char *cubetohash);
+int corner_map(const char *cubetohash);
 
 int corner_generate(unsigned char *cornertable, const char *solution);
 

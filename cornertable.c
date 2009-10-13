@@ -30,29 +30,12 @@
  */
 
 /*
- * corner_hash
+ * corner_map
  * Input: a cube_type string
  * Output: An integer in the range 0 to 88179840-1
  *
- * The general method is to process the first 7 of the 8 corner cubies.
- * For the first corner cube, since it has 24 possible positions, the
- * hash space is split into 24 even sections (3674160 elements long)
- * A number is calculated 0 through 23 that represents which position
- * the first corner cubie is in, and multiplied by 3674160, which becomes
- * the index.
- *
- * Then the second corner cube is similar, except the remaining space (which
- * is 3674160 elements long) is split into 21 equal parts, since the second
- * corner cubie has 21 possible positions.  That works out to 174960.  So,
- * similarly, a number 0-20 is calculated and multiplied by 174960 and then
- * added to the index.  This is repeated for each of the first 7 corner
- * cubies. The eighth cubie has only 1 possible position, so it is not
- * included in any calculations. (It cannot be rotated but one way since
- * the cube would not be solvable)
- *
- * This method takes about 37 mins on my 2GHz Intel T7200
  */
-int corner_hash(const char *cubestr)
+int corner_map(const char *cubestr)
 {
     char positions[] = {0,2,5,7,12,14,17,19};
     int index = 0;
@@ -238,7 +221,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
          * if item is at our current target depth, add it to hash table
          */
         if (current.distance == depth) {
-            hash = corner_hash(current.cube_data);
+            hash = corner_map(current.cube_data);
             if (hash & 1) {
                 if (!(cornertable[(hash-1)/2] >> 4)) {
                     cornertable[(hash-1)/2] |= current.distance << 4;
@@ -269,7 +252,7 @@ int corner_generate(unsigned char *cornertable, const char *solution)
                  * Check if turned is in instack and is greater than
                  * or equal to the depth.  If so, skip
                  */
-                hash = corner_hash(turned);
+                hash = corner_map(turned);
                 if (hash&1 ? \
                         ((instack[(hash-1)/2] >> 4) <= (current.distance+1)) : \
                         ((instack[hash/2] & 15) <= (current.distance+1))) {

@@ -200,7 +200,7 @@ int goal_solve(const char *scrambled, const char *solved,
                 heuristic = 0;
 
                 if (cornertable) {
-                    hash = corner_hash(turns[numturns].cube_data);
+                    hash = corner_map(turns[numturns].cube_data);
                     heuristic = TABLE_LOOKUP(cornertable, hash);
 #ifdef DEBUG_ASSERTS
                     if (heuristic < 0 || heuristic > 11) {
