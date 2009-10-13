@@ -34,112 +34,69 @@
  * Input: a cube_type string
  * Output: An integer in the range 0 to 88179840-1
  *
+ * How this works:
+ * First find which permutation the 8 corner cubies are in with respect
+ * to their position. There are 8! permutations, and are mapped
+ * to a number 0 through 8!-1.
+ * To do this, first the inversion vector is computed. Then, the vector
+ * is treated as a factoradic number and is converted into decimal.
+ *
+ * The rotations also need to be factored in. There are 3^7 rotation
+ * configurations. Since each rotation is independent (discarding the last
+ * cubie which is determined by the other 7) I treat the rotations as a 7 digit
+ * number in base 3. It's converted to decimal to get a number 0 though 3^7-1
+ *
+ * These two numbers are then combined thusly:
+ * permutation * 3^7 + rotation
  */
 int corner_map(const char *cubestr)
 {
-    char positions[] = {0,2,5,7,12,14,17,19};
-    int index = 0;
-    int pos, rot,num, i;
+    int index;
 
-    char *cubie; /* points to the current cubie in question */
+    int inversions[8] = {0,0,0,0,0,0,0,0};
+    int positions[8];
+    int i, j;
 
-    /* First cubie */
-    cubie = CUBIE(cubestr, 0);
-    num = cubie[0]; /* position id */
-    pos=0;
-    /* Find its index in positions array.  In this case, it's
-     * a number 0-7, for the next it's 0-6, and so fourth */
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    /* Remove that element from the array (that position is occupied
-     * so no other cubie can be in it) */
-    for (i=pos; i< 7; i++)
-        positions[i] = positions[i+1];
-    /* 3674160 = 21*18*15*12*9*6 */
-    /* pos+rot*8 has range 0 - 23 */
-    /* so index after this line will be one one of the boundaries if the
-     * hash space is split in 24 (24 places this cubie could go)
-     * remember total hash space is
-     * 88179840 = 24*21*18*15*12*9*6
-     */
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*8) * 3674160;
-    /* The next cubie will add to the index such that the remaining hash space
-     * (3674160) is split into 21 parts and so fourth (hence taking the pos out
-     * of the positions array, now pos can only be 0-6)
-     */
-    
-    /* second */
-    cubie = CUBIE(cubestr, 2);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    for (i=pos; i< 6; i++)
-        positions[i] = positions[i+1];
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*7) * 174960;
-    
-    /* third */
-    cubie = CUBIE(cubestr, 5);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    for (i=pos; i< 5; i++)
-        positions[i] = positions[i+1];
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*6) * 9720;
+    // Put all the positions into the positions array
+    positions[0] = CUBIE(cubestr,0)[0];
+    positions[1] = CUBIE(cubestr,2)[0];
+    positions[2] = CUBIE(cubestr,5)[0];
+    positions[3] = CUBIE(cubestr,7)[0];
+    positions[4] = CUBIE(cubestr,12)[0];
+    positions[5] = CUBIE(cubestr,14)[0];
+    positions[6] = CUBIE(cubestr,17)[0];
+    positions[7] = CUBIE(cubestr,19)[0];
 
-    /* fourth */
-    cubie = CUBIE(cubestr, 7);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    for (i=pos; i< 4; i++)
-        positions[i] = positions[i+1];
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*5) * 648;
+    for (i=0; i<8; i++)
+        for (j=i+1; j<8; j++)
+            if (positions[i] > positions[j])
+                inversions[i]++;
 
-    /* fifth */
-    cubie = CUBIE(cubestr, 12);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    for (i=pos; i< 3; i++)
-        positions[i] = positions[i+1];
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*4) * 54;
+    // the inversion vector is computed. Now compute the permutation index
+    // using factoradic numbering
+    index =  inversions[0] * 7*6*5*4*3*2*1;
+    index += inversions[1] * 6*5*4*3*2*1;
+    index += inversions[2] * 5*4*3*2*1;
+    index += inversions[3] * 4*3*2*1;
+    index += inversions[4] * 3*2*1;
+    index += inversions[5] * 2*1;
+    index += inversions[6] * 1;
+    index += inversions[7]; // * 0!
 
-    /* sixth */
-    cubie = CUBIE(cubestr, 14);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    for (i=pos; i< 2; i++)
-        positions[i] = positions[i+1];
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*3) * 6;
+    index *= 2187; // (3^7)
 
-    /* seventh */
-    cubie = CUBIE(cubestr, 17);
-    num = cubie[0]; /* position id */
-    pos=0;
-    while (num != positions[pos])
-        pos++; /* This will segfault if it falls off the end of the array.
-                that would be an error anyways. */
-    rot = cubie[1]; /* 0 - 2 */
-    index += (pos + rot*2);
-    
+    // Now compute the rotations and add them into the index
+    // treat each rotation value as a digit in base 3
+    // skip the last one
+    index += CUBIE(cubestr,0)[1] * 3*3*3*3*3*3;
+    index += CUBIE(cubestr,2)[1] * 3*3*3*3*3;
+    index += CUBIE(cubestr,5)[1] * 3*3*3*3;
+    index += CUBIE(cubestr,7)[1] * 3*3*3;
+    index += CUBIE(cubestr,12)[1]* 3*3;
+    index += CUBIE(cubestr,14)[1]* 3;
+    index += CUBIE(cubestr,17)[1];
+
+
 #ifdef DEBUG_ASSERTS
     if (index >= 88179840) {
         fprintf(stderr, "\nWARNING: HASH RETURNED %d\n", index);
