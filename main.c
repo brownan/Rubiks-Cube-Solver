@@ -37,7 +37,7 @@ int make_corner()
 int make_edge(int t)
 {
     FILE *output;
-    unsigned char *edgetable = CORNER_TABLE_NEW;
+    unsigned char *edgetable = EDGE_TABLE_NEW;
     edge_generate(edgetable, cube_solved, t);
     if (t==1)
         output = fopen("table_edge1.rht", "w");
