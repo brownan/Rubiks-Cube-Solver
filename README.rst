@@ -30,7 +30,7 @@ Verify the table generation worked with these md5 signatures:
 61db7e6c5f73a6e96abdb96c182c6da3
     table_corner.rht
 
-70f82a8a0810b30ed47eebefe74e25cb
+28577b26564c1b12ec6bc2ce61fa2ef4
     table_edge1.rht
 
 2164d32703941aee8a4218bae595d944

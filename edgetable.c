@@ -456,7 +456,7 @@ int edge_generate(unsigned char *table, const char *solution, int tablenum)
      */
     instack = EDGE_TABLE_NEW;
 
-    depth = -1;
+    depth = 0;
     while (count < 42577920)
     {
         /* if stack is empty, go up a level */
@@ -477,7 +477,7 @@ int edge_generate(unsigned char *table, const char *solution, int tablenum)
 
         /* Print out status every 2^18 pops  (approx every 200k)*/
         if ((popcount & 0777777) == 0777777) {
-            fprintf(stderr, "\r%d/42577920 hashed, on level:%d/10, total traversed:%d %d%% ", count, depth, popcount, popcount/2752511);
+            fprintf(stderr, "\r%d/42577920 hashed, on level:%d/10, total traversed:%d", count, depth, popcount);
         }
 #ifdef PROFILE_MODE
         /* For profiling, so I don't have to wait an hour to gather data */
@@ -486,56 +486,55 @@ int edge_generate(unsigned char *table, const char *solution, int tablenum)
         }
 #endif
 
-        /*
-         * if item is at our current target depth, add it to hash table
-         */
-        if (current.distance == depth) {
-            hash = hashfunc(current.cube_data);
-            if (hash & 1) {
-                if (!(table[(hash-1)/2] >> 4)) {
-                    table[(hash-1)/2] |= current.distance << 4;
-                    count++;
+        /* Look at all turns of the current cube */
+        for (i=0; i<18; i++) {
+            /* Determine if we should skip this turn */
+            if (current.turn != -1 && SHOULDIAVOID(i, current.turn)) {
+                continue;
+            }
+
+            memcpy(turned, current.cube_data, CUBELEN);
+            cube_turn(turned, i);
+
+            /*
+             * Check if turned is in instack and is greater than
+             * or equal to the depth.  If so, skip
+             */
+            hash = hashfunc(turned);
+            if (hash&1 ? \
+                    ((instack[(hash-1)/2] >> 4) <= (current.distance+1)) : \
+                    ((instack[hash/2] & 15) <= (current.distance+1))) {
+                continue;
+            }
+            /* add to instack */
+            if (hash&1) {
+                instack[(hash-1)/2] &= 15;
+                instack[(hash-1)/2] |= (current.distance+1) << 4;
+            } else {
+                instack[hash/2] &= 15<<4;
+                instack[hash/2] |= (current.distance+1);
+            }
+
+            if (current.distance+1 == depth) {
+                /*
+                 * if item is at our current target depth, add it to hash table
+                 */
+                if (hash & 1) {
+                    if (!(table[(hash-1)/2] >> 4)) {
+                        table[(hash-1)/2] |= (current.distance+1) << 4;
+                        count++;
+                    } else {
+                        /* A duplicate, skip */
+                    }
                 } else {
-                    /* A duplicate, skip */
+                    if (!(table[hash/2]&15)) {
+                        table[hash/2] |= current.distance + 1;
+                        count++;
+                    } else {
+                        /* a duplicate */
+                    }
                 }
             } else {
-                if (!(table[hash/2]&15)) {
-                    table[hash/2] |= current.distance;
-                    count++;
-                } else {
-                    /* a duplicate */
-                }
-            }
-        } else {
-            /* Not at the current depth, put all turns onto the stack */
-            for (i=0; i<18; i++) {
-                /* Determine if we should skip this turn */
-                if (current.turn != -1 && SHOULDIAVOID(i, current.turn)) {
-                    continue;
-                }
-
-                memcpy(turned, current.cube_data, CUBELEN);
-                cube_turn(turned, i);
-
-                /*
-                 * Check if turned is in instack and is greater than
-                 * or equal to the depth.  If so, skip
-                 */
-                hash = hashfunc(turned);
-                if (hash&1 ? \
-                        ((instack[(hash-1)/2] >> 4) <= (current.distance+1)) : \
-                        ((instack[hash/2] & 15) <= (current.distance+1))) {
-                    continue;
-                }
-                /* add to instack */
-                if (hash&1) {
-                    instack[(hash-1)/2] &= 15;
-                    instack[(hash-1)/2] |= (current.distance+1) << 4;
-                } else {
-                    instack[hash/2] &= 15<<4;
-                    instack[hash/2] |= (current.distance+1);
-                }
-
                 /* Add to real stack */
                 stack_push(stack, turned, i, current.distance+1);
             }
