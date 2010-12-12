@@ -26,6 +26,9 @@ $(OBJS): $(HEADS) Makefile
 solver: $(OBJS) main.c
 	gcc $(CFLAGS) $(OBJS) main.c -o solver
 
+table_test: $(OBJS) table.o
+	gcc $(CFLAGS) $(OBJS) table.o -o table_test
+
 tags: $(SRCS) $(HEADS)
 	-ctags -R .
 
