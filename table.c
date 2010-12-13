@@ -21,8 +21,9 @@
 #include "table.h"
 #include "stack.h"
 #include "edgetable.h"
+#include "cornertable.h"
 
-static int generate(unsigned char *table, heuristic heuristics_info);
+static int generate(unsigned char *table, struct heuristic heuristics_info);
 static int write(unsigned char *table, FILE *output, int length);
 static int read(unsigned char *table, FILE *input, int length);
 
@@ -36,7 +37,7 @@ static int read(unsigned char *table, FILE *input, int length);
  * table_generate takes a pointer to a heuristic struct, and generates its
  * table.
  */
-unsigned char *table_generate(heuristic *heuristic_info)
+unsigned char *table_generate(struct heuristic *heuristic_info)
 {
     FILE *output;
     unsigned char *rtable = calloc(heuristic_info->num_entries>>1,1);
@@ -53,7 +54,7 @@ unsigned char *table_generate(heuristic *heuristic_info)
     return rtable;
 }
 
-unsigned char *table_load(heuristic *heuristic_info)
+unsigned char *table_load(struct heuristic *heuristic_info)
 {
     FILE *input = fopen(heuristic_info->filename, "r");
     unsigned char *rtable = calloc(heuristic_info->num_entries>>1,1);
@@ -92,7 +93,7 @@ static int read(unsigned char *table, FILE *input, int length)
  * This actually does the generating.
  * Takes the heuristic struct right on the stack, not a pointer
  */
-static int generate(unsigned char *table, heuristic heuristics_info)
+static int generate(unsigned char *table, struct heuristic heuristics_info)
 {
 
     stacktype *stack;
@@ -102,7 +103,13 @@ static int generate(unsigned char *table, heuristic heuristics_info)
      * and an int representing the distance, 'distance'
      */
     qdata current;
-    int count = 0; /* total hashed */
+
+    /*
+     * total entries of the table filled
+     * this starts at 1 because we account for the "solved" cube specially,
+     * since that has a distance 0
+     */
+    int count = 1;
     int popcount = 0; /* total traversed */
     int hash;
     int i;
@@ -110,6 +117,7 @@ static int generate(unsigned char *table, heuristic heuristics_info)
     int depth;
     cube_type turned;
 
+    int solvedhash = heuristics_info.map_function(cube_solved);
 
     /* Create a stack */
     stack = STACK_NEW;
@@ -134,6 +142,22 @@ static int generate(unsigned char *table, heuristic heuristics_info)
             depth++;
             /* clear out instack table */
             memset(instack, 255, heuristics_info.num_entries>>1);
+            /* set solved state to 0, so it's not traversed at all. This is
+             * necessary for some tables but not for others because of how the
+             * traversal differs. For tables where every possible move affects
+             * the state, the zero state won't be visited, but for others, it
+             * may be. To make the algorithm consistent, the solved state is
+             * marked so it won't be visited at all.
+             * This also means that instack is not just an optimization, but is
+             * required for correctness.
+             */
+            if (solvedhash & 1) {
+                /* zero out upper bits */
+                instack[(solvedhash-1)/2] &= 0x0f;
+            } else {
+                /* zero out lower bits */
+                instack[solvedhash/2] &= 0xf0;
+            }
         }
 
         /* Pop the first item off, put it in current */
@@ -190,6 +214,7 @@ static int generate(unsigned char *table, heuristic heuristics_info)
                 /*
                  * if item is at our current target depth, add it to the table
                  */
+
                 if (hash & 1) {
                     if (!(table[(hash-1)/2] >> 4)) {
                         table[(hash-1)/2] |= (current.distance+1) << 4;
@@ -238,15 +263,22 @@ static int generate(unsigned char *table, heuristic heuristics_info)
 /**
  * Table definitions
  */
-static heuristic edge_table1 = {
+struct heuristic edge_table1 = {
     edge_hash1,
     42577920,
     10,
     "new_edgetable.rht"
 };
 
+struct heuristic corner_table = {
+    corner_map,
+    88179840,
+    11,
+    "new_cornertable.rht"
+};
+
 int main()
 {
-    table_generate(&edge_table1);
+    table_generate(&corner_table);
     return 0;
 }

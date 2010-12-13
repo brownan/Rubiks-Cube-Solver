@@ -33,18 +33,18 @@
  *
  * * And the filename that should store this table
  */
-typedef struct {
+struct heuristic {
     int (*map_function)(const char *);
     int num_entries;
     int max_level;
     char *filename;
-} heuristic;
+};
 
 /**
  * Method prototypes, see table.c for details
  */
-unsigned char *table_generate(heuristic *heuristic_info);
-void table_save(heuristic *heuristic_info);
-unsigned char *table_load(heuristic *heruistic_info);
+unsigned char *table_generate(struct heuristic *heuristic_info);
+void table_save(struct heuristic *heuristic_info);
+unsigned char *table_load(struct heuristic *heruistic_info);
 
 #endif
