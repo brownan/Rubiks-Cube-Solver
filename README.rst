@@ -13,7 +13,7 @@ TO COMPILE
    You will also need the "make" program. No other fancy libraries are needed.
 
 2. Run the "make" command in the source directory to compile all the files.
-   This will produce a program called "main" which is used to generate the
+   This will produce a program called "solver" which is used to generate the
    heuristics tables and to solve the cube
 
 RUNNING THE PROGRAM
