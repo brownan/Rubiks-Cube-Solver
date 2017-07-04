@@ -81,8 +81,8 @@ Wait for solutions!
 
 NOTES
 =====
-I was re-writing how the heruistics tables are computed when I last worked on
-this. Specifically, I changed how a cube configuration was maped onto an index
+I was re-writing how the heuristics tables are computed when I last worked on
+this. Specifically, I changed how a cube configuration was mapped onto an index
 into the table. You can see the new version in corner_table.c, but I never got
 around to changing it for the two edge tables.
 
