@@ -59,28 +59,31 @@ int solve(char *tosolve)
 
     corner_table = CORNER_TABLE_NEW;
     input = fopen("table_corner.rht", "r");
-    if (!corner_read(corner_table, input)) {
-        printf("Warning: could not open corner table\n");
+    if (NULL == input || !corner_read(corner_table, input)) {
+        printf("Warning: could not open corner table.  did you generate it?\n");
         free(corner_table);
         corner_table = NULL;
+        return (0);
     }
     fclose(input);
 
     edge_table = EDGE_TABLE_NEW;
     input = fopen("table_edge1.rht", "r");
-    if (!edge_read(edge_table, input)) {
-        printf("Warning: could not open edge table\n");
+    if (NULL == input || !edge_read(edge_table, input)) {
+        printf("Warning: could not open edge table.  did you generate it?\n");
         free(edge_table);
         edge_table = NULL;
+        return (0);
     }
     fclose(input);
 
     edge_table2 = EDGE_TABLE_NEW;
     input = fopen("table_edge2.rht", "r");
-    if (!edge_read(edge_table2, input)) {
-        printf("Warning: could not open second edge table\n");
+    if (NULL == input || !edge_read(edge_table2, input)) {
+        printf("Warning: could not open second edge table.  did you generate it?\n");
         free(edge_table2);
         edge_table2 = NULL;
+        return (0);
     }
     fclose(input);
 
